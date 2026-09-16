@@ -77,13 +77,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body class="bg-[#f8fafc] text-slate-700 font-sans antialiased min-h-screen flex flex-col justify-between font-normal">
 
-    <!-- Top Site Header (Pure White - Logo & Subscribe Button) -->
-    <header class="bg-white sticky top-0 z-50 shadow-sm border-b border-slate-200/60">
-        <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3.5 flex justify-between items-center">
+    <!-- Top Site Header (Glassmorphism Navbar - Logo & Subscribe Button) -->
+    <header class="bg-white/70 backdrop-blur-xl backdrop-saturate-150 sticky top-0 z-50 border-b border-slate-200/50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3 flex justify-between items-center">
             <!-- Left: Company Logo -->
             <div class="flex items-center">
                 <a href="javascript:void(0)" class="flex items-center">
-                    <img src="/assets/logo.png" alt="Sterling Septic & Plumbing, LLC" class="h-8 sm:h-10 w-auto object-contain" onerror="this.onerror=null; this.src='/assets/favicon.png';">
+                    <img src="/assets/logo.png" alt="Sterling Septic & Plumbing, LLC" class="h-8 sm:h-9 w-auto object-contain" onerror="this.onerror=null; this.src='/assets/favicon.png';">
                 </a>
             </div>
 
@@ -157,27 +157,27 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     </div>
                 </div>
 
-                <!-- Table Wrap (Mobile Responsive Horizontal Scroll) -->
+                <!-- Table Wrap (Mobile Responsive Horizontal Scroll - Strictly Single Line Text) -->
                 <div class="overflow-x-auto w-full">
-                    <table class="w-full min-w-[640px] text-left text-xs sm:text-sm text-slate-700">
+                    <table class="w-full min-w-[700px] text-left text-xs sm:text-sm text-slate-700 border-collapse">
                         <thead class="bg-slate-50 text-slate-500 font-semibold uppercase text-[10px] sm:text-[11px] tracking-wider border-b border-slate-200">
                             <tr>
-                                <th class="px-4 sm:px-6 py-3 sm:py-3.5">Scraper Name</th>
-                                <th class="px-4 sm:px-6 py-3 sm:py-3.5">Active Target Date (PST)</th>
-                                <th class="px-4 sm:px-6 py-3 sm:py-3.5">Status</th>
-                                <th class="px-4 sm:px-6 py-3 sm:py-3.5">Batch Progress</th>
-                                <th class="px-4 sm:px-6 py-3 sm:py-3.5">Last Sync Time (PST)</th>
+                                <th class="px-4 sm:px-6 py-3 sm:py-3.5 whitespace-nowrap">Scraper Name</th>
+                                <th class="px-4 sm:px-6 py-3 sm:py-3.5 whitespace-nowrap">Active Target Date</th>
+                                <th class="px-4 sm:px-6 py-3 sm:py-3.5 whitespace-nowrap">Status</th>
+                                <th class="px-4 sm:px-6 py-3 sm:py-3.5 whitespace-nowrap">Batch Progress</th>
+                                <th class="px-4 sm:px-6 py-3 sm:py-3.5 whitespace-nowrap">Last Sync Time (PST)</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
                             <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="px-4 sm:px-6 py-3.5 sm:py-4 font-semibold text-slate-800">dispatch-board-display-automation</td>
-                                <td id="activeDateTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700">-</td>
-                                <td id="statusPillTd" class="px-4 sm:px-6 py-3.5 sm:py-4">
+                                <td class="px-4 sm:px-6 py-3.5 sm:py-4 font-semibold text-slate-800 whitespace-nowrap">dispatch-board-display-automation</td>
+                                <td id="activeDateTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700 whitespace-nowrap">Today</td>
+                                <td id="statusPillTd" class="px-4 sm:px-6 py-3.5 sm:py-4 whitespace-nowrap">
                                     <span class="px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">RUNNING</span>
                                 </td>
-                                <td id="progressTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700">Day 0 of 30 (30 Days Left)</td>
-                                <td id="lastSyncTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700">- <span class="text-[11px] sm:text-xs font-normal text-slate-400 ml-1">PST</span></td>
+                                <td id="progressTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700 whitespace-nowrap">Day 0 of 30 (30 Days Left)</td>
+                                <td id="lastSyncTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700 whitespace-nowrap">-</td>
                             </tr>
                         </tbody>
                     </table>
@@ -212,7 +212,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 
                 document.getElementById('activeDateTd').innerText = p.current_date || 'Today';
                 document.getElementById('progressTd').innerText = 'Day ' + curDay + ' of ' + total + ' (' + rem + ' Days Left)';
-                document.getElementById('lastSyncTd').innerHTML = (data.last_run_pst || data.last_run || '-') + ' <span class="text-xs font-normal text-slate-400 ml-1">PST</span>';
+                
+                const rawLastSync = data.last_run_pst || data.last_run || '-';
+                let cleanSync = String(rawLastSync).trim();
+                if (cleanSync !== '-') {
+                    cleanSync = cleanSync.replace(/\s*PST\s*PST/gi, ' PST').replace(/\s*PST$/gi, '') + ' PST';
+                }
+                document.getElementById('lastSyncTd').innerText = cleanSync;
 
                 const statusStr = p.status || data.last_status || 'running';
                 const msg = p.status_message || data.last_status || 'System Active';
