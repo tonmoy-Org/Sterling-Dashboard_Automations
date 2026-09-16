@@ -62,6 +62,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     fontFamily: {
                         sans: ['Public Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
                     },
+                    borderRadius: {
+                        DEFAULT: '5px',
+                        'sm': '5px',
+                        'md': '5px',
+                        'lg': '5px',
+                        'xl': '5px',
+                        '2xl': '5px',
+                        'full': '5px'
+                    },
                     colors: {
                         sterling: {
                             DEFAULT: '#76AADA',
@@ -74,6 +83,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             }
         }
     </script>
+    <style>
+        .rounded-sm, .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl, .rounded-full, button, input, select {
+            border-radius: 5px !important;
+        }
+        #fieldedgeDot {
+            border-radius: 9999px !important;
+        }
+    </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-700 font-sans antialiased min-h-screen flex flex-col justify-between font-normal">
 
@@ -89,7 +106,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
             <!-- Right: Phone Call Button -->
             <div>
-                <a href="tel:2533424061" class="bg-[#76AADA] hover:bg-[#5c95c8] text-white px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-bold shadow-sm transition-all duration-200 inline-flex items-center gap-2">
+                <a href="tel:2533424061" class="bg-[#76AADA] hover:bg-[#5c95c8] text-white px-4 sm:px-5 py-2 rounded-[5px] text-xs sm:text-sm font-bold shadow-sm transition-all duration-200 inline-flex items-center gap-2">
                     <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" viewBox="0 0 24 24">
                         <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                     </svg>
@@ -113,7 +130,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <!-- Main Section (Full Page Background & Aligned with Navbar Width) -->
     <main class="w-full bg-[#f8fafc] py-6 sm:py-8 flex-grow">
         <div class="max-w-6xl mx-auto px-4 sm:px-8">
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="bg-white rounded-[5px] border border-slate-200 shadow-sm overflow-hidden">
                 <!-- Card Header -->
                 <div class="bg-white border-b border-slate-200/80 px-4 sm:px-6 py-3.5 sm:py-4 flex justify-between items-center">
                     <h2 class="text-xs sm:text-base font-semibold text-[#76AADA]">Automation Execution Logs</h2>
@@ -125,15 +142,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
                 <!-- Controls Bar (Mobile Responsive) -->
                 <div class="bg-slate-50/70 border-b border-slate-100 px-4 sm:px-6 py-3 sm:py-3.5 flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center">
-                    <input type="text" class="px-3.5 py-1.5 border border-slate-300 rounded-md text-xs w-full sm:w-64 focus:ring-2 focus:ring-[#76AADA] focus:outline-none text-slate-700" placeholder="Filter by scraper name..." value="dispatch-board-display-automation">
+                    <input type="text" class="px-3.5 py-1.5 border border-slate-300 rounded-[5px] text-xs w-full sm:w-64 focus:ring-2 focus:ring-[#76AADA] focus:outline-none text-slate-700" placeholder="Filter by scraper name..." value="dispatch-board-display-automation">
                     <div class="flex gap-2 sm:gap-3 w-full sm:w-auto">
-                        <select class="px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-700 focus:ring-2 focus:ring-[#76AADA] focus:outline-none flex-1 sm:flex-none">
+                        <select class="px-3 py-1.5 border border-slate-300 rounded-[5px] text-xs bg-white text-slate-700 focus:ring-2 focus:ring-[#76AADA] focus:outline-none flex-1 sm:flex-none">
                             <option>All statuses</option>
                             <option>Running</option>
                             <option>Success</option>
                             <option>Error</option>
                         </select>
-                        <select class="px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-700 focus:ring-2 focus:ring-[#76AADA] focus:outline-none flex-1 sm:flex-none">
+                        <select class="px-3 py-1.5 border border-slate-300 rounded-[5px] text-xs bg-white text-slate-700 focus:ring-2 focus:ring-[#76AADA] focus:outline-none flex-1 sm:flex-none">
                             <option>10 per scraper</option>
                             <option>25 per scraper</option>
                             <option>50 per scraper</option>
@@ -144,13 +161,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <!-- Badges Section & FieldEdge Real-Time Login Indicator -->
                 <div class="px-4 sm:px-6 py-3 border-b border-slate-100 flex flex-wrap gap-2 sm:gap-2.5 items-center justify-between bg-white">
                     <div class="flex flex-wrap gap-2 sm:gap-2.5 items-center">
-                        <span id="successBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">0 Success</span>
-                        <span id="errorBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">0 Error</span>
-                        <span id="partialBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">0 Partial</span>
-                        <span id="runningBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">1 Running</span>
+                        <span id="successBadge" class="px-2.5 sm:px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">0 Success</span>
+                        <span id="errorBadge" class="px-2.5 sm:px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">0 Error</span>
+                        <span id="partialBadge" class="px-2.5 sm:px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">0 Partial</span>
+                        <span id="runningBadge" class="px-2.5 sm:px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">1 Running</span>
                     </div>
                     <!-- Real-Time FieldEdge Login Status -->
-                    <div id="fieldedgeBadge" class="px-3 py-1 rounded-md text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 whitespace-nowrap">
+                    <div id="fieldedgeBadge" class="px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 whitespace-nowrap">
                         <span id="fieldedgeDot" class="w-2 h-2 rounded-full bg-emerald-500"></span>
                         <span id="fieldedgeText">FieldEdge: Connected / Active Session</span>
                     </div>
@@ -162,8 +179,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         <span>30-Day FieldEdge Display Pre-Creation Progress</span>
                         <span id="pctLabel">0%</span>
                     </div>
-                    <div class="w-full bg-slate-200/80 rounded-full h-3 sm:h-3.5 overflow-hidden p-0.5">
-                        <div id="progressBarFill" class="bg-gradient-to-r from-[#76AADA] to-[#5c95c8] h-full rounded-full transition-all duration-500 ease-out" style="width: 0%;"></div>
+                    <div class="w-full bg-slate-200/80 rounded-[5px] h-3 sm:h-3.5 overflow-hidden p-0.5">
+                        <div id="progressBarFill" class="bg-gradient-to-r from-[#76AADA] to-[#5c95c8] h-full rounded-[5px] transition-all duration-500 ease-out" style="width: 0%;"></div>
                     </div>
                 </div>
 
@@ -184,7 +201,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                 <td class="px-4 sm:px-6 py-3.5 sm:py-4 font-semibold text-slate-800 whitespace-nowrap">dispatch-board-display-automation</td>
                                 <td id="activeDateTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700 whitespace-nowrap">Today</td>
                                 <td id="statusPillTd" class="px-4 sm:px-6 py-3.5 sm:py-4 whitespace-nowrap">
-                                    <span class="px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">RUNNING</span>
+                                    <span class="px-2.5 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">RUNNING</span>
                                 </td>
                                 <td id="progressTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700 whitespace-nowrap">Day 0 of 30 (30 Days Left)</td>
                                 <td id="lastSyncTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700 whitespace-nowrap">-</td>
@@ -240,15 +257,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const feText = document.getElementById('fieldedgeText');
 
                 if (feStatus.toLowerCase().includes('logged out') || feStatus.toLowerCase().includes('retry') || feStatus.toLowerCase().includes('pause') || msg.includes('Concurrent')) {
-                    feBadge.className = 'px-3 py-1 rounded-md text-[11px] sm:text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1.5 whitespace-nowrap';
+                    feBadge.className = 'px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1.5 whitespace-nowrap';
                     feDot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-ping';
                     feText.innerText = 'FieldEdge: ' + (data.fieldedge_status || 'Session Logged Out (Wait 30m)');
                 } else if (feStatus.toLowerCase().includes('logg')) {
-                    feBadge.className = 'px-3 py-1 rounded-md text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200 flex items-center gap-1.5 whitespace-nowrap';
+                    feBadge.className = 'px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200 flex items-center gap-1.5 whitespace-nowrap';
                     feDot.className = 'w-2 h-2 rounded-full bg-[#76AADA] animate-pulse';
                     feText.innerText = 'FieldEdge: Logging in...';
                 } else {
-                    feBadge.className = 'px-3 py-1 rounded-md text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 whitespace-nowrap';
+                    feBadge.className = 'px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 whitespace-nowrap';
                     feDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
                     feText.innerText = 'FieldEdge: Connected / Active Session';
                 }
@@ -258,20 +275,20 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
                 if (statusStr.includes('paused') || statusStr.includes('concurrent') || msg.includes('logged out') || msg.includes('Concurrent')) {
                     const waitMsg = msg.includes('Retrying') ? msg : 'PAUSED (FieldEdge Login Retry in 30m)';
-                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200" title="' + msg + '">' + waitMsg + '</span>';
-                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-[5px] text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200" title="' + msg + '">' + waitMsg + '</span>';
+                    runningBadge.className = 'px-3 py-1 rounded-[5px] text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200';
                     runningBadge.innerText = '1 Paused (Concurrent Login)';
                 } else if (statusStr === 'completed' || data.last_status === 'success') {
-                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">COMPLETED</span>';
-                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-[5px] text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">COMPLETED</span>';
+                    runningBadge.className = 'px-3 py-1 rounded-[5px] text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200';
                     runningBadge.innerText = '0 Running (Finished)';
                 } else if (statusStr.includes('error')) {
-                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">ERROR</span>';
-                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-[5px] text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">ERROR</span>';
+                    runningBadge.className = 'px-3 py-1 rounded-[5px] text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200';
                     runningBadge.innerText = '1 Error';
                 } else {
-                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">RUNNING</span>';
-                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-[5px] text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">RUNNING</span>';
+                    runningBadge.className = 'px-3 py-1 rounded-[5px] text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200';
                     runningBadge.innerText = '1 Running';
                 }
 
