@@ -53,339 +53,138 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sterling Septic & Plumbing LLC Status</title>
     <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f8fafc;
-            color: #0f172a;
-            -webkit-font-smoothing: antialiased;
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Public Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        sterling: {
+                            DEFAULT: '#1966c0',
+                            dark: '#124d93',
+                            light: '#2375d8',
+                            bg: '#f8fafc'
+                        }
+                    }
+                }
+            }
         }
-
-        /* Top Hero Banner matching exact Sterling design */
-        .hero-banner {
-            background: #1966c0;
-            color: #ffffff;
-            padding: 24px 32px 48px 32px;
-            text-align: center;
-        }
-        .banner-top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1100px;
-            margin: 0 auto 28px auto;
-        }
-        .logo-box {
-            background: transparent;
-            display: flex;
-            align-items: center;
-        }
-        .logo-box img {
-            max-height: 46px;
-            object-fit: contain;
-        }
-        .btn-subscribe {
-            background: #2375d8;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 9px 24px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
-            transition: background 0.2s;
-        }
-        .btn-subscribe:hover { background: #1d65c1; }
-
-        .banner-title {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 6px;
-            letter-spacing: -0.6px;
-        }
-        .banner-updated {
-            font-size: 13px;
-            color: #dbeafe;
-            margin-bottom: 18px;
-            font-weight: 500;
-        }
-        .banner-desc {
-            max-width: 760px;
-            margin: 0 auto;
-            font-size: 13.5px;
-            line-height: 1.6;
-            color: #eff6ff;
-            font-weight: 400;
-        }
-
-        /* Navigation Tabs Bar - Only LIVE UPDATES as requested */
-        .nav-tabs-bar {
-            background: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-        }
-        .nav-tabs-container {
-            display: flex;
-            justify-content: center;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        .tab-btn {
-            padding: 16px 20px;
-            font-size: 13px;
-            font-weight: 700;
-            color: #1966c0;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            border-bottom: 3px solid #1966c0;
-        }
-
-        /* Main Container */
-        .main-container {
-            max-width: 1080px;
-            margin: 36px auto;
-            padding: 0 16px;
-        }
-
-        /* Automation Log Card */
-        .card {
-            background: #ffffff;
-            border-radius: 10px;
-            border: 1px solid #cbd5e1;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            overflow: hidden;
-        }
-        .card-header {
-            background: #1966c0;
-            color: #ffffff;
-            padding: 14px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .card-header h2 { font-size: 15px; font-weight: 700; }
-        .header-updated {
-            font-size: 12.5px;
-            color: #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .spin-icon { cursor: pointer; transition: transform 0.4s ease; }
-        .spin-icon:hover { transform: rotate(180deg); }
-
-        /* Filter Controls Bar */
-        .controls-bar {
-            padding: 16px 24px;
-            background: #fafafa;
-            border-bottom: 1px solid #f1f5f9;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .input-search {
-            padding: 8px 14px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 13px;
-            width: 250px;
-            outline: none;
-            font-family: inherit;
-        }
-        .select-filter {
-            padding: 8px 14px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 13px;
-            background: #ffffff;
-            outline: none;
-            font-family: inherit;
-        }
-
-        /* Badges Section */
-        .badges-bar {
-            padding: 16px 24px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            border-bottom: 1px solid #f1f5f9;
-            flex-wrap: wrap;
-        }
-        .badge {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12.5px;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .badge-success { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-        .badge-error { background: #ffe4e6; color: #be123c; border: 1px solid #fecdd3; }
-        .badge-partial { background: #fef9c3; color: #a16207; border: 1px solid #fef08a; }
-        .badge-running { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
-        .badge-warning { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
-
-        /* Progress Bar Section */
-        .progress-box {
-            padding: 20px 24px;
-            background: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .progress-header-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            font-weight: 700;
-            color: #475569;
-            margin-bottom: 8px;
-        }
-        .progress-bar-bg {
-            background: #e2e8f0;
-            height: 14px;
-            border-radius: 7px;
-            overflow: hidden;
-        }
-        .progress-bar-fill {
-            background: linear-gradient(90deg, #1966c0, #2563eb);
-            height: 100%;
-            transition: width 0.5s ease;
-        }
-
-        /* Data Table */
-        .table-wrap { width: 100%; overflow-x: auto; }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 13px;
-        }
-        th {
-            background: #f8fafc;
-            color: #64748b;
-            font-weight: 700;
-            padding: 14px 24px;
-            border-bottom: 1px solid #e2e8f0;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
-        td {
-            padding: 16px 24px;
-            border-bottom: 1px solid #f1f5f9;
-            color: #334155;
-            font-weight: 500;
-        }
-        tr:hover td { background: #f8fafc; }
-        .pst-tag { color: #64748b; font-size: 12px; font-weight: 600; margin-left: 4px; }
-
-        /* Footer */
-        .site-footer {
-            text-align: center;
-            padding: 32px 16px;
-            color: #64748b;
-            font-size: 13px;
-            font-weight: 500;
-        }
-    </style>
+    </script>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col justify-between">
 
-    <div class="hero-banner">
-        <div class="banner-top-bar">
-            <div class="logo-box">
-                <img src="/assets/logo.png" alt="Sterling Septic & Plumbing LLC" onerror="this.onerror=null; this.src='/assets/favicon.png';">
+    <!-- Top Hero Banner -->
+    <header class="bg-sterling text-white pt-6 pb-12 px-4 sm:px-8">
+        <div class="max-w-6xl mx-auto flex justify-between items-center mb-8">
+            <div class="flex items-center">
+                <img src="/assets/logo.png" alt="Sterling Septic & Plumbing LLC" class="h-10 sm:h-12 w-auto object-contain" onerror="this.onerror=null; this.src='/assets/favicon.png';">
             </div>
-            <button class="btn-subscribe">Subscribe</button>
+            <button class="bg-[#2375d8] hover:bg-[#1555a3] text-white border border-white/20 px-5 py-2 rounded-lg text-sm font-bold shadow-sm transition-all duration-200">
+                Subscribe
+            </button>
         </div>
-        <h1 class="banner-title">Sterling Services Operations Status</h1>
-        <div class="banner-updated" id="bannerUpdatedText">Updated 0s ago • PST Timezone</div>
-        <p class="banner-desc">
-            Welcome to the Sterling Septic & Plumbing LLC Status Page. Bookmark or subscribe to this page for the latest on service performance and any major issues affecting your plumbing needs. We'll do our best to post updates immediately, but please note there may be a delay as we diagnose problems.
-        </p>
-    </div>
 
-    <div class="nav-tabs-bar">
-        <div class="nav-tabs-container">
-            <div class="tab-btn">LIVE UPDATES</div>
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2">Sterling Services Operations Status</h1>
+            <div id="bannerUpdatedText" class="text-xs sm:text-sm text-blue-100 font-medium mb-4">Updated 0s ago • PST Timezone</div>
+            <p class="text-xs sm:text-sm leading-relaxed text-blue-50 font-normal">
+                Welcome to the Sterling Septic & Plumbing LLC Status Page. Bookmark or subscribe to this page for the latest on service performance and any major issues affecting your plumbing needs. We'll do our best to post updates immediately, but please note there may be a delay as we diagnose problems.
+            </p>
         </div>
-    </div>
+    </header>
 
-    <div class="main-container">
-        <div class="card">
-            <div class="card-header">
-                <h2>Automation Execution Logs</h2>
-                <div class="header-updated">
+    <!-- Navigation Bar - LIVE UPDATES tab only -->
+    <nav class="bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-6xl mx-auto flex justify-center">
+            <div class="text-sterling font-bold text-xs sm:text-sm border-b-2 border-sterling py-3.5 px-6 uppercase tracking-wider">
+                LIVE UPDATES
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 py-8 flex-grow w-full">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <!-- Card Header -->
+            <div class="bg-sterling text-white px-6 py-4 flex justify-between items-center">
+                <h2 class="text-sm sm:text-base font-bold tracking-wide">Automation Execution Logs</h2>
+                <div class="text-xs text-blue-100 flex items-center gap-2">
                     <span id="cardUpdatedText">Updated 0s ago</span>
-                    <span class="spin-icon" onclick="fetchStatus()">🔄</span>
+                    <button onclick="fetchStatus()" title="Refresh" class="hover:rotate-180 transition-transform duration-300">🔄</button>
                 </div>
             </div>
 
-            <div class="controls-bar">
-                <input type="text" class="input-search" placeholder="Filter by scraper name..." value="dispatch-board-display-automation">
-                <select class="select-filter">
+            <!-- Controls Bar -->
+            <div class="bg-slate-50 border-b border-slate-100 px-6 py-3.5 flex flex-wrap gap-3 items-center">
+                <input type="text" class="px-3.5 py-1.5 border border-slate-300 rounded-md text-xs w-full sm:w-64 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Filter by scraper name..." value="dispatch-board-display-automation">
+                <select class="px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     <option>All statuses</option>
                     <option>Running</option>
                     <option>Success</option>
                     <option>Error</option>
                 </select>
-                <select class="select-filter">
+                <select class="px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     <option>10 per scraper</option>
                     <option>25 per scraper</option>
                     <option>50 per scraper</option>
                 </select>
             </div>
 
-            <div class="badges-bar">
-                <span class="badge badge-success" id="successBadge">0 Success</span>
-                <span class="badge badge-error" id="errorBadge">0 Error</span>
-                <span class="badge badge-partial" id="partialBadge">0 Partial</span>
-                <span class="badge badge-running" id="runningBadge">1 Running</span>
+            <!-- Badges Section -->
+            <div class="px-6 py-3.5 border-b border-slate-100 flex flex-wrap gap-2.5 items-center bg-white">
+                <span id="successBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">0 Success</span>
+                <span id="errorBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">0 Error</span>
+                <span id="partialBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">0 Partial</span>
+                <span id="runningBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">1 Running</span>
             </div>
 
-            <div class="progress-box">
-                <div class="progress-header-row">
+            <!-- Progress Bar Section -->
+            <div class="px-6 py-4 bg-slate-50/70 border-b border-slate-200">
+                <div class="flex justify-between text-xs font-bold text-slate-600 mb-2">
                     <span>30-Day FieldEdge Display Pre-Creation Progress</span>
                     <span id="pctLabel">0%</span>
                 </div>
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+                <div class="w-full bg-slate-200 rounded-full h-3.5 overflow-hidden p-0.5">
+                    <div id="progressBarFill" class="bg-gradient-to-r from-blue-600 to-indigo-600 h-full rounded-full transition-all duration-500 ease-out" style="width: 0%;"></div>
                 </div>
             </div>
 
-            <div class="table-wrap">
-                <table>
-                    <thead>
+            <!-- Table Wrap -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs sm:text-sm text-slate-700">
+                    <thead class="bg-slate-50 text-slate-500 font-bold uppercase text-[11px] tracking-wider border-b border-slate-200">
                         <tr>
-                            <th>Scraper Name</th>
-                            <th>Active Target Date (PST)</th>
-                            <th>Status</th>
-                            <th>Batch Progress</th>
-                            <th>Last Sync Time (PST)</th>
+                            <th class="px-6 py-3.5">Scraper Name</th>
+                            <th class="px-6 py-3.5">Active Target Date (PST)</th>
+                            <th class="px-6 py-3.5">Status</th>
+                            <th class="px-6 py-3.5">Batch Progress</th>
+                            <th class="px-6 py-3.5">Last Sync Time (PST)</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>dispatch-board-display-automation</strong></td>
-                            <td id="activeDateTd">-</td>
-                            <td id="statusPillTd"><span class="badge badge-running">RUNNING</span></td>
-                            <td id="progressTd">Day 0 of 30 (30 Days Left)</td>
-                            <td id="lastSyncTd">- <span class="pst-tag">PST</span></td>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-6 py-4 font-bold text-slate-900">dispatch-board-display-automation</td>
+                            <td id="activeDateTd" class="px-6 py-4 font-medium">-</td>
+                            <td id="statusPillTd" class="px-6 py-4">
+                                <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">RUNNING</span>
+                            </td>
+                            <td id="progressTd" class="px-6 py-4 font-medium">Day 0 of 30 (30 Days Left)</td>
+                            <td id="lastSyncTd" class="px-6 py-4 font-medium">- <span class="text-xs font-semibold text-slate-400 ml-1">PST</span></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
+    </main>
 
-    <div class="site-footer">
+    <!-- Footer -->
+    <footer class="text-center py-6 text-xs font-medium text-slate-500 border-t border-slate-200/80 bg-white">
         © 2026 Sterling Septic & Plumbing LLC • All rights reserved.
-    </div>
+    </footer>
 
     <script>
         let lastFetchTime = Date.now();
@@ -408,7 +207,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 
                 document.getElementById('activeDateTd').innerText = p.current_date || 'Today';
                 document.getElementById('progressTd').innerText = 'Day ' + curDay + ' of ' + total + ' (' + rem + ' Days Left)';
-                document.getElementById('lastSyncTd').innerHTML = (data.last_run_pst || data.last_run || '-') + ' <span class="pst-tag">PST</span>';
+                document.getElementById('lastSyncTd').innerHTML = (data.last_run_pst || data.last_run || '-') + ' <span class="text-xs font-semibold text-slate-400 ml-1">PST</span>';
 
                 const statusStr = p.status || data.last_status || 'running';
                 const msg = p.status_message || data.last_status || 'System Active';
@@ -417,20 +216,20 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const runningBadge = document.getElementById('runningBadge');
 
                 if (statusStr.includes('paused') || statusStr.includes('concurrent') || msg.includes('logged out')) {
-                    statusPill.innerHTML = '<span class="badge badge-warning" title="' + msg + '">PAUSED (30m Retry)</span>';
-                    runningBadge.className = 'badge badge-warning';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200" title="' + msg + '">PAUSED (30m Retry)</span>';
+                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200';
                     runningBadge.innerText = '1 Paused (Concurrent Login)';
                 } else if (statusStr === 'completed' || data.last_status === 'success') {
-                    statusPill.innerHTML = '<span class="badge badge-success">COMPLETED</span>';
-                    runningBadge.className = 'badge badge-success';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">COMPLETED</span>';
+                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200';
                     runningBadge.innerText = '0 Running (Finished)';
                 } else if (statusStr.includes('error')) {
-                    statusPill.innerHTML = '<span class="badge badge-error">ERROR</span>';
-                    runningBadge.className = 'badge badge-error';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">ERROR</span>';
+                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200';
                     runningBadge.innerText = '1 Error';
                 } else {
-                    statusPill.innerHTML = '<span class="badge badge-running">RUNNING</span>';
-                    runningBadge.className = 'badge badge-running';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">RUNNING</span>';
+                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200';
                     runningBadge.innerText = '1 Running';
                 }
 
@@ -446,7 +245,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             document.getElementById('cardUpdatedText').innerText = text;
         }
 
-        setInterval(fetchStatus, 3000);
+        setInterval(fetchStatus, 2000);
         setInterval(updateRelativeTime, 1000);
         fetchStatus();
     </script>
