@@ -92,10 +92,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }
     </style>
 </head>
-<body class="text-slate-700 font-sans antialiased min-h-screen flex flex-col justify-between font-normal relative" style="background: linear-gradient(rgba(248, 250, 252, 0.88), rgba(248, 250, 252, 0.88)), url('/assets/arrival-window.jpg') center / cover no-repeat fixed;">
+<body class="text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between font-normal relative" style="background: linear-gradient(180deg, rgba(15, 23, 42, 0.55) 0%, rgba(30, 41, 59, 0.45) 100%), url('/assets/arrival-window.jpg') center / cover no-repeat fixed;">
 
-    <!-- Top Site Header (Glassmorphism Navbar - Logo & Subscribe Button) -->
-    <header class="bg-white/70 backdrop-blur-xl backdrop-saturate-150 sticky top-0 z-50 border-b border-slate-200/50 shadow-sm">
+    <!-- Top Site Header (Glassmorphism Navbar) -->
+    <header class="bg-white/85 backdrop-blur-xl border-b border-slate-200/60 shadow-sm sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3 flex justify-between items-center">
             <!-- Left: Company Logo -->
             <div class="flex items-center">
@@ -106,7 +106,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
             <!-- Right: Phone Call Button -->
             <div>
-                <a href="tel:2533424061" class="bg-[#76AADA] hover:bg-[#5c95c8] text-white px-4 sm:px-5 py-2 rounded-[5px] text-xs sm:text-sm font-bold shadow-sm transition-all duration-200 inline-flex items-center gap-2">
+                <a href="tel:2533424061" class="bg-[#76AADA] hover:bg-[#5c95c8] text-white px-4 sm:px-5 py-2 rounded-[5px] text-xs sm:text-sm font-bold shadow-md transition-all duration-200 inline-flex items-center gap-2">
                     <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" viewBox="0 0 24 24">
                         <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                     </svg>
@@ -116,41 +116,41 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
     </header>
 
-    <!-- Status Hero Section (Seamless Match with Log Section Background) -->
-    <section class="pt-6 pb-8 px-4 sm:px-8 border-b border-slate-200/60 bg-transparent">
-        <div class="max-w-6xl mx-auto text-center">
-            <h1 class="text-xl sm:text-3xl font-semibold text-slate-900 tracking-normal mb-2">Sterling Services Operations Status</h1>
-            <div id="bannerUpdatedText" class="text-xs sm:text-sm text-slate-500 font-medium mb-4">Updated 0s ago • PST Timezone</div>
-            <p class="text-xs sm:text-sm leading-relaxed text-slate-600 font-normal max-w-3xl mx-auto px-2">
-                Welcome to the Sterling Septic & Plumbing LLC Dispatch Board Display Automation Status Page. This system automatically pre-creates 30-day static visual aid work orders and technician display schedules on the FieldEdge Dispatch Board to ensure smooth dispatch operations. Monitor live automation sync progress, active target dates, and real-time FieldEdge session status below.
-            </p>
-        </div>
-    </section>
+    <!-- Main Content Area -->
+    <main class="w-full py-6 sm:py-8 flex-grow">
+        <div class="max-w-6xl mx-auto px-4 sm:px-8 space-y-6">
 
-    <!-- Main Section (Full Page Background & Aligned with Navbar Width) -->
-    <main class="w-full py-6 sm:py-8 flex-grow bg-transparent">
-        <div class="max-w-6xl mx-auto px-4 sm:px-8">
-            <div class="bg-white rounded-[5px] border border-slate-200 shadow-sm overflow-hidden">
+            <!-- Hero Glass Card (Frosted Glass Container for High Contrast Readability) -->
+            <div class="bg-white/90 backdrop-blur-xl border border-white/60 shadow-xl rounded-[5px] p-6 sm:p-8 text-center">
+                <h1 class="text-xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-2">Sterling Services Operations Status</h1>
+                <div id="bannerUpdatedText" class="text-xs sm:text-sm text-slate-500 font-semibold mb-3">Updated 0s ago • PST Timezone</div>
+                <p class="text-xs sm:text-sm leading-relaxed text-slate-700 font-normal max-w-3xl mx-auto">
+                    Welcome to the Sterling Septic & Plumbing LLC Dispatch Board Display Automation Status Page. This system automatically pre-creates 30-day static visual aid work orders and technician display schedules on the FieldEdge Dispatch Board to ensure smooth dispatch operations. Monitor live automation sync progress, active target dates, and real-time FieldEdge session status below.
+                </p>
+            </div>
+
+            <!-- Execution Logs Glass Card -->
+            <div class="bg-white/92 backdrop-blur-xl rounded-[5px] border border-white/70 shadow-2xl overflow-hidden">
                 <!-- Card Header -->
-                <div class="bg-white border-b border-slate-200/80 px-4 sm:px-6 py-3.5 sm:py-4 flex justify-between items-center">
-                    <h2 class="text-xs sm:text-base font-semibold text-slate-900">Automation Execution Logs</h2>
-                    <div class="text-[11px] sm:text-xs text-slate-500 flex items-center gap-2">
+                <div class="bg-white/90 border-b border-slate-200/80 px-4 sm:px-6 py-3.5 sm:py-4 flex justify-between items-center">
+                    <h2 class="text-xs sm:text-base font-bold text-slate-900">Automation Execution Logs</h2>
+                    <div class="text-[11px] sm:text-xs text-slate-600 font-medium flex items-center gap-2">
                         <span id="cardUpdatedText">Updated 0s ago</span>
-                        <button onclick="fetchStatus()" title="Refresh" class="hover:rotate-180 transition-transform duration-300 text-slate-500">🔄</button>
+                        <button onclick="fetchStatus()" title="Refresh" class="hover:rotate-180 transition-transform duration-300 text-slate-600">🔄</button>
                     </div>
                 </div>
 
                 <!-- Controls Bar (Mobile Responsive) -->
-                <div class="bg-slate-50/70 border-b border-slate-100 px-4 sm:px-6 py-3 sm:py-3.5 flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center">
-                    <input type="text" class="px-3.5 py-1.5 border border-slate-300 rounded-[5px] text-xs w-full sm:w-64 focus:ring-2 focus:ring-[#76AADA] focus:outline-none text-slate-700" placeholder="Filter by scraper name..." value="dispatch-board-display-automation">
+                <div class="bg-slate-50/80 border-b border-slate-200/80 px-4 sm:px-6 py-3 sm:py-3.5 flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center">
+                    <input type="text" class="px-3.5 py-1.5 border border-slate-300 rounded-[5px] text-xs w-full sm:w-64 focus:ring-2 focus:ring-[#76AADA] focus:outline-none text-slate-800 bg-white" placeholder="Filter by scraper name..." value="dispatch-board-display-automation">
                     <div class="flex gap-2 sm:gap-3 w-full sm:w-auto">
-                        <select class="px-3 py-1.5 border border-slate-300 rounded-[5px] text-xs bg-white text-slate-700 focus:ring-2 focus:ring-[#76AADA] focus:outline-none flex-1 sm:flex-none">
+                        <select class="px-3 py-1.5 border border-slate-300 rounded-[5px] text-xs bg-white text-slate-800 focus:ring-2 focus:ring-[#76AADA] focus:outline-none flex-1 sm:flex-none">
                             <option>All statuses</option>
                             <option>Running</option>
                             <option>Success</option>
                             <option>Error</option>
                         </select>
-                        <select class="px-3 py-1.5 border border-slate-300 rounded-[5px] text-xs bg-white text-slate-700 focus:ring-2 focus:ring-[#76AADA] focus:outline-none flex-1 sm:flex-none">
+                        <select class="px-3 py-1.5 border border-slate-300 rounded-[5px] text-xs bg-white text-slate-800 focus:ring-2 focus:ring-[#76AADA] focus:outline-none flex-1 sm:flex-none">
                             <option>10 per scraper</option>
                             <option>25 per scraper</option>
                             <option>50 per scraper</option>
@@ -159,52 +159,52 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 </div>
 
                 <!-- Badges Section & FieldEdge Real-Time Login Indicator -->
-                <div class="px-4 sm:px-6 py-3 border-b border-slate-100 flex flex-wrap gap-2 sm:gap-2.5 items-center justify-between bg-white">
+                <div class="px-4 sm:px-6 py-3 border-b border-slate-200/80 flex flex-wrap gap-2 sm:gap-2.5 items-center justify-between bg-white/70">
                     <div class="flex flex-wrap gap-2 sm:gap-2.5 items-center">
-                        <span id="successBadge" class="px-2.5 sm:px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">0 Success</span>
-                        <span id="errorBadge" class="px-2.5 sm:px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">0 Error</span>
-                        <span id="partialBadge" class="px-2.5 sm:px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">0 Partial</span>
-                        <span id="runningBadge" class="px-2.5 sm:px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">1 Running</span>
+                        <span id="successBadge" class="px-2.5 sm:px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-sm">0 Success</span>
+                        <span id="errorBadge" class="px-2.5 sm:px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-300 shadow-sm">0 Error</span>
+                        <span id="partialBadge" class="px-2.5 sm:px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-300 shadow-sm">0 Partial</span>
+                        <span id="runningBadge" class="px-2.5 sm:px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-semibold bg-sky-50 text-[#5c95c8] border border-sky-300 shadow-sm">1 Running</span>
                     </div>
                     <!-- Real-Time FieldEdge Login Status -->
-                    <div id="fieldedgeBadge" class="px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 whitespace-nowrap">
+                    <div id="fieldedgeBadge" class="px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300 flex items-center gap-1.5 whitespace-nowrap shadow-sm">
                         <span id="fieldedgeDot" class="w-2 h-2 rounded-full bg-emerald-500"></span>
                         <span id="fieldedgeText">FieldEdge: Connected / Active Session</span>
                     </div>
                 </div>
 
                 <!-- Progress Bar Section -->
-                <div class="px-4 sm:px-6 py-3.5 sm:py-4 bg-slate-50/50 border-b border-slate-200">
-                    <div class="flex justify-between text-[11px] sm:text-xs font-semibold text-slate-600 mb-2">
+                <div class="px-4 sm:px-6 py-3.5 sm:py-4 bg-slate-50/60 border-b border-slate-200">
+                    <div class="flex justify-between text-[11px] sm:text-xs font-bold text-slate-700 mb-2">
                         <span>30-Day FieldEdge Display Pre-Creation Progress</span>
                         <span id="pctLabel">0%</span>
                     </div>
-                    <div class="w-full bg-slate-200/80 rounded-[5px] h-3 sm:h-3.5 overflow-hidden p-0.5">
+                    <div class="w-full bg-slate-200/90 rounded-[5px] h-3.5 overflow-hidden p-0.5 shadow-inner">
                         <div id="progressBarFill" class="bg-gradient-to-r from-[#76AADA] to-[#5c95c8] h-full rounded-[5px] transition-all duration-500 ease-out" style="width: 0%;"></div>
                     </div>
                 </div>
 
                 <!-- Table Wrap (Mobile Responsive Horizontal Scroll - Strictly Single Line Text) -->
                 <div class="overflow-x-auto w-full">
-                    <table class="w-full min-w-[700px] text-left text-xs sm:text-sm text-slate-700 border-collapse">
-                        <thead class="bg-slate-50 text-slate-500 font-semibold uppercase text-[10px] sm:text-[11px] tracking-wider border-b border-slate-200">
+                    <table class="w-full min-w-[700px] text-left text-xs sm:text-sm text-slate-800 border-collapse">
+                        <thead class="bg-slate-100/90 text-slate-600 font-bold uppercase text-[10px] sm:text-[11px] tracking-wider border-b border-slate-200">
                             <tr>
-                                <th class="px-4 sm:px-6 py-3 sm:py-3.5 whitespace-nowrap">Scraper Name</th>
-                                <th class="px-4 sm:px-6 py-3 sm:py-3.5 whitespace-nowrap">Active Target Date</th>
-                                <th class="px-4 sm:px-6 py-3 sm:py-3.5 whitespace-nowrap">Status</th>
-                                <th class="px-4 sm:px-6 py-3 sm:py-3.5 whitespace-nowrap">Batch Progress</th>
-                                <th class="px-4 sm:px-6 py-3 sm:py-3.5 whitespace-nowrap">Last Sync Time (PST)</th>
+                                <th class="px-4 sm:px-6 py-3.5 whitespace-nowrap">Scraper Name</th>
+                                <th class="px-4 sm:px-6 py-3.5 whitespace-nowrap">Active Target Date</th>
+                                <th class="px-4 sm:px-6 py-3.5 whitespace-nowrap">Status</th>
+                                <th class="px-4 sm:px-6 py-3.5 whitespace-nowrap">Batch Progress</th>
+                                <th class="px-4 sm:px-6 py-3.5 whitespace-nowrap">Last Sync Time (PST)</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="px-4 sm:px-6 py-3.5 sm:py-4 font-semibold text-slate-800 whitespace-nowrap">dispatch-board-display-automation</td>
-                                <td id="activeDateTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700 whitespace-nowrap">Today</td>
-                                <td id="statusPillTd" class="px-4 sm:px-6 py-3.5 sm:py-4 whitespace-nowrap">
-                                    <span class="px-2.5 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">RUNNING</span>
+                        <tbody class="divide-y divide-slate-200/70 bg-white/50">
+                            <tr class="hover:bg-white/90 transition-colors">
+                                <td class="px-4 sm:px-6 py-4 font-bold text-slate-900 whitespace-nowrap">dispatch-board-display-automation</td>
+                                <td id="activeDateTd" class="px-4 sm:px-6 py-4 font-medium text-slate-800 whitespace-nowrap">Today</td>
+                                <td id="statusPillTd" class="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2.5 py-1 rounded-[5px] text-[11px] sm:text-xs font-semibold bg-sky-50 text-[#5c95c8] border border-sky-300 shadow-sm">RUNNING</span>
                                 </td>
-                                <td id="progressTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700 whitespace-nowrap">Day 0 of 30 (30 Days Left)</td>
-                                <td id="lastSyncTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700 whitespace-nowrap">-</td>
+                                <td id="progressTd" class="px-4 sm:px-6 py-4 font-medium text-slate-800 whitespace-nowrap">Day 0 of 30 (30 Days Left)</td>
+                                <td id="lastSyncTd" class="px-4 sm:px-6 py-4 font-medium text-slate-800 whitespace-nowrap">-</td>
                             </tr>
                         </tbody>
                     </table>
@@ -214,7 +214,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </main>
 
     <!-- Small Compact Footer -->
-    <footer class="bg-white border-t border-slate-200/80 py-3.5 text-center text-[11px] sm:text-xs font-normal text-slate-500">
+    <footer class="bg-white/85 backdrop-blur-xl border-t border-slate-200/60 py-3.5 text-center text-[11px] sm:text-xs font-medium text-slate-600">
         © 2026 Sterling Septic & Plumbing LLC • All rights reserved.
     </footer>
 
