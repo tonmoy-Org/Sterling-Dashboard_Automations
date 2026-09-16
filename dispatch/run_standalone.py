@@ -77,17 +77,31 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- Top Hero Banner -->
-    <header class="bg-sterling text-white pt-6 pb-12 px-4 sm:px-8">
-        <div class="max-w-6xl mx-auto flex justify-between items-center mb-8">
+    <!-- Top Site Navbar (Matching Sterling Main Website Header) -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3.5 flex justify-between items-center">
+            <!-- Left: Company Logo -->
             <div class="flex items-center">
-                <img src="/assets/logo.png" alt="Sterling Septic & Plumbing LLC" class="h-10 sm:h-12 w-auto object-contain" onerror="this.onerror=null; this.src='/assets/favicon.png';">
+                <a href="javascript:void(0)" class="flex items-center">
+                    <img src="/assets/logo.png" alt="Sterling Septic & Plumbing, LLC" class="h-9 sm:h-11 w-auto object-contain" onerror="this.onerror=null; this.src='/assets/favicon.png';">
+                </a>
             </div>
-            <button class="bg-[#2375d8] hover:bg-[#1555a3] text-white border border-white/20 px-5 py-2 rounded-lg text-sm font-bold shadow-sm transition-all duration-200">
-                Subscribe
-            </button>
-        </div>
 
+            <!-- Right: Menu Links & Phone Number Button (No routing) -->
+            <div class="flex items-center space-x-3 sm:space-x-6">
+                <a href="javascript:void(0)" class="text-xs sm:text-sm font-bold text-slate-900 hover:text-sterling transition-colors hidden md:inline-block">Services</a>
+                <a href="javascript:void(0)" class="text-xs sm:text-sm font-bold text-slate-900 hover:text-sterling transition-colors hidden md:inline-block">Cities We Serve</a>
+                <a href="javascript:void(0)" class="text-xs sm:text-sm font-bold text-slate-900 hover:text-sterling transition-colors hidden sm:inline-block">Contact Us</a>
+                <a href="javascript:void(0)" class="text-xs sm:text-sm font-bold text-slate-900 hover:text-sterling transition-colors hidden sm:inline-block">Blog</a>
+                <a href="javascript:void(0)" class="bg-[#6ba4d8] hover:bg-[#5a93c7] text-white px-3.5 py-2 rounded-md text-xs sm:text-sm font-bold shadow-sm transition-all duration-200">
+                    (253) 342-4061
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Status Hero Banner -->
+    <section class="bg-sterling text-white py-10 px-4 sm:px-8">
         <div class="max-w-3xl mx-auto text-center">
             <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2">Sterling Services Operations Status</h1>
             <div id="bannerUpdatedText" class="text-xs sm:text-sm text-blue-100 font-medium mb-4">Updated 0s ago • PST Timezone</div>
@@ -95,7 +109,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 Welcome to the Sterling Septic & Plumbing LLC Status Page. Bookmark or subscribe to this page for the latest on service performance and any major issues affecting your plumbing needs. We'll do our best to post updates immediately, but please note there may be a delay as we diagnose problems.
             </p>
         </div>
-    </header>
+    </section>
 
     <!-- Navigation Bar - LIVE UPDATES tab only -->
     <nav class="bg-white border-b border-slate-200 shadow-sm">
