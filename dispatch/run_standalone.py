@@ -119,10 +119,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <!-- Status Hero Section (Seamless Match with Log Section Background) -->
     <section class="bg-[#f8fafc] pt-6 pb-8 px-4 sm:px-8 border-b border-slate-200/60">
         <div class="max-w-6xl mx-auto text-center">
-            <h1 class="text-xl sm:text-3xl font-semibold text-[#76AADA] tracking-normal mb-2">Sterling Services Operations Status</h1>
+            <h1 class="text-xl sm:text-3xl font-semibold text-slate-900 tracking-normal mb-2">Sterling Services Operations Status</h1>
             <div id="bannerUpdatedText" class="text-xs sm:text-sm text-slate-500 font-medium mb-4">Updated 0s ago • PST Timezone</div>
             <p class="text-xs sm:text-sm leading-relaxed text-slate-600 font-normal max-w-3xl mx-auto px-2">
-                Welcome to the Sterling Septic & Plumbing LLC Status Page. Bookmark or subscribe to this page for the latest on service performance and any major issues affecting your plumbing needs. We'll do our best to post updates immediately, but please note there may be a delay as we diagnose problems.
+                Welcome to the Sterling Septic & Plumbing LLC Dispatch Board Display Automation Status Page. This system automatically pre-creates 30-day static visual aid work orders and technician display schedules on the FieldEdge Dispatch Board to ensure smooth dispatch operations. Monitor live automation sync progress, active target dates, and real-time FieldEdge session status below.
             </p>
         </div>
     </section>
@@ -133,7 +133,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <div class="bg-white rounded-[5px] border border-slate-200 shadow-sm overflow-hidden">
                 <!-- Card Header -->
                 <div class="bg-white border-b border-slate-200/80 px-4 sm:px-6 py-3.5 sm:py-4 flex justify-between items-center">
-                    <h2 class="text-xs sm:text-base font-semibold text-[#76AADA]">Automation Execution Logs</h2>
+                    <h2 class="text-xs sm:text-base font-semibold text-slate-900">Automation Execution Logs</h2>
                     <div class="text-[11px] sm:text-xs text-slate-500 flex items-center gap-2">
                         <span id="cardUpdatedText">Updated 0s ago</span>
                         <button onclick="fetchStatus()" title="Refresh" class="hover:rotate-180 transition-transform duration-300 text-slate-500">🔄</button>
