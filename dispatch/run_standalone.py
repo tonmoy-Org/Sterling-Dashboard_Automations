@@ -120,11 +120,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <main class="w-full py-6 sm:py-8 flex-grow">
         <div class="max-w-6xl mx-auto px-4 sm:px-8 space-y-6">
 
-            <!-- Hero Glass Card (Frosted Glass Container for High Contrast Readability) -->
-            <div class="bg-white/90 backdrop-blur-xl border border-white/60 shadow-xl rounded-[5px] p-6 sm:p-8 text-center">
-                <h1 class="text-xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-2">Sterling Services Operations Status</h1>
-                <div id="bannerUpdatedText" class="text-xs sm:text-sm text-slate-500 font-semibold mb-3">Updated 0s ago • PST Timezone</div>
-                <p class="text-xs sm:text-sm leading-relaxed text-slate-700 font-normal max-w-3xl mx-auto">
+            <!-- Hero Section (Clean Text Directly on Dark Overlay Background) -->
+            <div class="py-2 sm:py-4 text-center">
+                <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-2 drop-shadow-lg">Sterling Services Operations Status</h1>
+                <div id="bannerUpdatedText" class="text-xs sm:text-sm text-slate-200 font-semibold mb-3 drop-shadow">Updated 0s ago • PST Timezone</div>
+                <p class="text-xs sm:text-sm leading-relaxed text-slate-100 font-normal max-w-3xl mx-auto px-2 drop-shadow">
                     Welcome to the Sterling Septic & Plumbing LLC Dispatch Board Display Automation Status Page. This system automatically pre-creates 30-day static visual aid work orders and technician display schedules on the FieldEdge Dispatch Board to ensure smooth dispatch operations. Monitor live automation sync progress, active target dates, and real-time FieldEdge session status below.
                 </p>
             </div>
