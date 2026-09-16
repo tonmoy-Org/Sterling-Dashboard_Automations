@@ -17,5 +17,6 @@ services:
       - TZ=America/Los_Angeles
     volumes:
       - ./dispatch/config:/app/config
+      - ./dispatch/assets:/app/assets
       - ./dispatch/run_standalone.py:/app/run_standalone.py
     command: python run_standalone.py --live --days 30 --loop --port 3000
