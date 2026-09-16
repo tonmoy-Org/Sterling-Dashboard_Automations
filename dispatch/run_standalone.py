@@ -77,10 +77,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- Top Site Header (Dark Navy Line on Top + Logo & Subscribe Button) -->
+    <!-- Top Site Header (Pure White - Logo & Subscribe Button) -->
     <header class="bg-white sticky top-0 z-50">
-        <!-- Dark Navy Bar at Very Top -->
-        <div class="bg-[#1c2d42] h-2.5 w-full"></div>
         <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3.5 flex justify-between items-center">
             <!-- Left: Company Logo -->
             <div class="flex items-center">
