@@ -1,0 +1,17 @@
+# Environment credentials (DO NOT COMMIT)
+.env
+*.env
+dispatch/.env
+dispatch/*.env
+
+# Python cache & locks
+__pycache__/
+*.py[cod]
+*$py.class
+*.lock
+*.log
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store

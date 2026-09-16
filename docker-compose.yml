@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  dispatch-automation:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dispatch_automation
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - dispatch/.env
+    environment:
+      - HEADLESS=true
+      - PORT=3000
+      - TZ=America/Los_Angeles
+    volumes:
+      - ./dispatch/config:/app/config
+    command: python run_standalone.py --live --days 30 --loop --port 3000
