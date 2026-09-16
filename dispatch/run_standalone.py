@@ -316,11 +316,19 @@ class StatusHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path.startswith("/assets/") or self.path in ("/favicon.ico", "/logo.png", "/favicon.png"):
             asset_name = os.path.basename(self.path)
-            asset_path = os.path.join(_dispatch_dir, "assets", asset_name)
-            if not os.path.exists(asset_path):
-                asset_path = os.path.join(_dispatch_dir, "assets", "logo.png" if "logo" in asset_name else "favicon.png")
-            
-            if os.path.exists(asset_path):
+            candidates = [
+                os.path.join(_dispatch_dir, "assets", asset_name),
+                os.path.join(_dispatch_dir, "dispatch", "assets", asset_name),
+                os.path.join(os.getcwd(), "assets", asset_name),
+                os.path.join(os.getcwd(), "dispatch", "assets", asset_name),
+            ]
+            asset_path = None
+            for cand in candidates:
+                if os.path.exists(cand):
+                    asset_path = cand
+                    break
+
+            if asset_path:
                 self.send_response(200)
                 ext = os.path.splitext(asset_path)[1].lower()
                 if ext in (".jpg", ".jpeg"):
@@ -334,6 +342,10 @@ class StatusHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.end_headers()
                 with open(asset_path, "rb") as f:
                     self.wfile.write(f.read())
+                return
+            else:
+                self.send_response(404)
+                self.end_headers()
                 return
 
         if "json=1" in self.path or "/api" in self.path or "application/json" in self.headers.get("Accept", ""):
