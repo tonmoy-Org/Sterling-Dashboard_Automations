@@ -54,7 +54,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <title>Sterling Septic & Plumbing LLC Status</title>
     <link rel="icon" type="image/png" href="/assets/favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -64,9 +64,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     },
                     colors: {
                         sterling: {
-                            DEFAULT: '#1966c0',
-                            dark: '#124d93',
-                            light: '#2375d8',
+                            DEFAULT: '#76AADA',
+                            dark: '#5c95c8',
+                            light: '#a3c7e8',
                             bg: '#f8fafc'
                         }
                     }
@@ -75,10 +75,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }
     </script>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col justify-between">
+<body class="bg-slate-50 text-slate-700 font-sans antialiased min-h-screen flex flex-col justify-between font-normal">
 
     <!-- Top Site Header (Pure White - Logo & Subscribe Button) -->
-    <header class="bg-white sticky top-0 z-50">
+    <header class="bg-white sticky top-0 z-50 shadow-sm">
         <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3.5 flex justify-between items-center">
             <!-- Left: Company Logo -->
             <div class="flex items-center">
@@ -89,17 +89,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
             <!-- Right: Subscribe Button -->
             <div>
-                <button class="bg-sterling hover:bg-[#124d93] text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm transition-all duration-200">
+                <button class="bg-[#76AADA] hover:bg-[#5c95c8] text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition-all duration-200">
                     Subscribe
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Status Hero Section (Seamless White Theme) -->
-    <section class="bg-white pt-4 pb-8 px-4 sm:px-8">
+    <!-- Status Hero Section (Seamless Light White Theme) -->
+    <section class="bg-white pt-6 pb-8 px-4 sm:px-8">
         <div class="max-w-3xl mx-auto text-center">
-            <h1 class="text-2xl sm:text-4xl font-extrabold text-sterling tracking-tight mb-2">Sterling Services Operations Status</h1>
+            <h1 class="text-2xl sm:text-3xl font-semibold text-[#76AADA] tracking-normal mb-2">Sterling Services Operations Status</h1>
             <div id="bannerUpdatedText" class="text-xs sm:text-sm text-slate-500 font-medium mb-4">Updated 0s ago • PST Timezone</div>
             <p class="text-xs sm:text-sm leading-relaxed text-slate-600 font-normal">
                 Welcome to the Sterling Septic & Plumbing LLC Status Page. Bookmark or subscribe to this page for the latest on service performance and any major issues affecting your plumbing needs. We'll do our best to post updates immediately, but please note there may be a delay as we diagnose problems.
@@ -110,25 +110,25 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <!-- Main Container -->
     <main class="max-w-5xl mx-auto px-4 py-8 flex-grow w-full">
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <!-- Card Header (Clean White Theme) -->
+            <!-- Card Header -->
             <div class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
-                <h2 class="text-sm sm:text-base font-bold text-sterling tracking-wide">Automation Execution Logs</h2>
+                <h2 class="text-sm sm:text-base font-semibold text-[#76AADA]">Automation Execution Logs</h2>
                 <div class="text-xs text-slate-500 flex items-center gap-2">
                     <span id="cardUpdatedText">Updated 0s ago</span>
-                    <button onclick="fetchStatus()" title="Refresh" class="hover:rotate-180 transition-transform duration-300 text-slate-600">🔄</button>
+                    <button onclick="fetchStatus()" title="Refresh" class="hover:rotate-180 transition-transform duration-300 text-slate-500">🔄</button>
                 </div>
             </div>
 
             <!-- Controls Bar -->
-            <div class="bg-slate-50 border-b border-slate-100 px-6 py-3.5 flex flex-wrap gap-3 items-center">
-                <input type="text" class="px-3.5 py-1.5 border border-slate-300 rounded-md text-xs w-full sm:w-64 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Filter by scraper name..." value="dispatch-board-display-automation">
-                <select class="px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <div class="bg-slate-50/70 border-b border-slate-100 px-6 py-3.5 flex flex-wrap gap-3 items-center">
+                <input type="text" class="px-3.5 py-1.5 border border-slate-300 rounded-md text-xs w-full sm:w-64 focus:ring-2 focus:ring-[#76AADA] focus:outline-none text-slate-700" placeholder="Filter by scraper name..." value="dispatch-board-display-automation">
+                <select class="px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-700 focus:ring-2 focus:ring-[#76AADA] focus:outline-none">
                     <option>All statuses</option>
                     <option>Running</option>
                     <option>Success</option>
                     <option>Error</option>
                 </select>
-                <select class="px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <select class="px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-700 focus:ring-2 focus:ring-[#76AADA] focus:outline-none">
                     <option>10 per scraper</option>
                     <option>25 per scraper</option>
                     <option>50 per scraper</option>
@@ -137,27 +137,27 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
             <!-- Badges Section -->
             <div class="px-6 py-3.5 border-b border-slate-100 flex flex-wrap gap-2.5 items-center bg-white">
-                <span id="successBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">0 Success</span>
-                <span id="errorBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">0 Error</span>
-                <span id="partialBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">0 Partial</span>
-                <span id="runningBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">1 Running</span>
+                <span id="successBadge" class="px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">0 Success</span>
+                <span id="errorBadge" class="px-3 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">0 Error</span>
+                <span id="partialBadge" class="px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">0 Partial</span>
+                <span id="runningBadge" class="px-3 py-1 rounded-full text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">1 Running</span>
             </div>
 
             <!-- Progress Bar Section -->
-            <div class="px-6 py-4 bg-slate-50/70 border-b border-slate-200">
-                <div class="flex justify-between text-xs font-bold text-slate-600 mb-2">
+            <div class="px-6 py-4 bg-slate-50/50 border-b border-slate-200">
+                <div class="flex justify-between text-xs font-semibold text-slate-600 mb-2">
                     <span>30-Day FieldEdge Display Pre-Creation Progress</span>
                     <span id="pctLabel">0%</span>
                 </div>
-                <div class="w-full bg-slate-200 rounded-full h-3.5 overflow-hidden p-0.5">
-                    <div id="progressBarFill" class="bg-gradient-to-r from-blue-600 to-indigo-600 h-full rounded-full transition-all duration-500 ease-out" style="width: 0%;"></div>
+                <div class="w-full bg-slate-200/80 rounded-full h-3.5 overflow-hidden p-0.5">
+                    <div id="progressBarFill" class="bg-gradient-to-r from-[#76AADA] to-[#5c95c8] h-full rounded-full transition-all duration-500 ease-out" style="width: 0%;"></div>
                 </div>
             </div>
 
             <!-- Table Wrap -->
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs sm:text-sm text-slate-700">
-                    <thead class="bg-slate-50 text-slate-500 font-bold uppercase text-[11px] tracking-wider border-b border-slate-200">
+                    <thead class="bg-slate-50 text-slate-500 font-semibold uppercase text-[11px] tracking-wider border-b border-slate-200">
                         <tr>
                             <th class="px-6 py-3.5">Scraper Name</th>
                             <th class="px-6 py-3.5">Active Target Date (PST)</th>
@@ -167,14 +167,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
-                        <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="px-6 py-4 font-bold text-slate-900">dispatch-board-display-automation</td>
-                            <td id="activeDateTd" class="px-6 py-4 font-medium">-</td>
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="px-6 py-4 font-semibold text-slate-800">dispatch-board-display-automation</td>
+                            <td id="activeDateTd" class="px-6 py-4 font-normal text-slate-700">-</td>
                             <td id="statusPillTd" class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">RUNNING</span>
+                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">RUNNING</span>
                             </td>
-                            <td id="progressTd" class="px-6 py-4 font-medium">Day 0 of 30 (30 Days Left)</td>
-                            <td id="lastSyncTd" class="px-6 py-4 font-medium">- <span class="text-xs font-semibold text-slate-400 ml-1">PST</span></td>
+                            <td id="progressTd" class="px-6 py-4 font-normal text-slate-700">Day 0 of 30 (30 Days Left)</td>
+                            <td id="lastSyncTd" class="px-6 py-4 font-normal text-slate-700">- <span class="text-xs font-normal text-slate-400 ml-1">PST</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -183,7 +183,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </main>
 
     <!-- Footer -->
-    <footer class="text-center py-6 text-xs font-medium text-slate-500 border-t border-slate-200/80 bg-white">
+    <footer class="text-center py-6 text-xs font-normal text-slate-500 border-t border-slate-200/80 bg-white">
         © 2026 Sterling Septic & Plumbing LLC • All rights reserved.
     </footer>
 
@@ -208,7 +208,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 
                 document.getElementById('activeDateTd').innerText = p.current_date || 'Today';
                 document.getElementById('progressTd').innerText = 'Day ' + curDay + ' of ' + total + ' (' + rem + ' Days Left)';
-                document.getElementById('lastSyncTd').innerHTML = (data.last_run_pst || data.last_run || '-') + ' <span class="text-xs font-semibold text-slate-400 ml-1">PST</span>';
+                document.getElementById('lastSyncTd').innerHTML = (data.last_run_pst || data.last_run || '-') + ' <span class="text-xs font-normal text-slate-400 ml-1">PST</span>';
 
                 const statusStr = p.status || data.last_status || 'running';
                 const msg = p.status_message || data.last_status || 'System Active';
@@ -217,20 +217,20 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const runningBadge = document.getElementById('runningBadge');
 
                 if (statusStr.includes('paused') || statusStr.includes('concurrent') || msg.includes('logged out')) {
-                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200" title="' + msg + '">PAUSED (30m Retry)</span>';
-                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200" title="' + msg + '">PAUSED (30m Retry)</span>';
+                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200';
                     runningBadge.innerText = '1 Paused (Concurrent Login)';
                 } else if (statusStr === 'completed' || data.last_status === 'success') {
-                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">COMPLETED</span>';
-                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">COMPLETED</span>';
+                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200';
                     runningBadge.innerText = '0 Running (Finished)';
                 } else if (statusStr.includes('error')) {
-                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">ERROR</span>';
-                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">ERROR</span>';
+                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200';
                     runningBadge.innerText = '1 Error';
                 } else {
-                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">RUNNING</span>';
-                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">RUNNING</span>';
+                    runningBadge.className = 'px-3 py-1 rounded-full text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200';
                     runningBadge.innerText = '1 Running';
                 }
 
