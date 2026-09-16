@@ -100,12 +100,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
     </header>
 
-    <!-- Status Hero Banner -->
-    <section class="bg-sterling text-white py-10 px-4 sm:px-8">
+    <!-- Status Hero Banner (Clean White Theme) -->
+    <section class="bg-white border-b border-slate-200 py-10 px-4 sm:px-8">
         <div class="max-w-3xl mx-auto text-center">
-            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2">Sterling Services Operations Status</h1>
-            <div id="bannerUpdatedText" class="text-xs sm:text-sm text-blue-100 font-medium mb-4">Updated 0s ago • PST Timezone</div>
-            <p class="text-xs sm:text-sm leading-relaxed text-blue-50 font-normal">
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-sterling tracking-tight mb-2">Sterling Services Operations Status</h1>
+            <div id="bannerUpdatedText" class="text-xs sm:text-sm text-slate-500 font-medium mb-4">Updated 0s ago • PST Timezone</div>
+            <p class="text-xs sm:text-sm leading-relaxed text-slate-600 font-normal">
                 Welcome to the Sterling Septic & Plumbing LLC Status Page. Bookmark or subscribe to this page for the latest on service performance and any major issues affecting your plumbing needs. We'll do our best to post updates immediately, but please note there may be a delay as we diagnose problems.
             </p>
         </div>
