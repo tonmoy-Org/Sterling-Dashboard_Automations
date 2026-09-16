@@ -314,8 +314,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 class StatusHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path.startswith("/assets/") or self.path in ("/favicon.ico", "/logo.png", "/favicon.png"):
-            asset_name = os.path.basename(self.path)
+        clean_path = self.path
+        if clean_path.startswith("/dispatch"):
+            clean_path = clean_path[len("/dispatch"):]
+            if not clean_path or not clean_path.startswith("/"):
+                clean_path = "/" + clean_path
+
+        if clean_path.startswith("/assets/") or clean_path in ("/favicon.ico", "/logo.png", "/favicon.png"):
+            asset_name = os.path.basename(clean_path)
             candidates = [
                 os.path.join(_dispatch_dir, "assets", asset_name),
                 os.path.join(_dispatch_dir, "dispatch", "assets", asset_name),
@@ -348,7 +354,7 @@ class StatusHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.end_headers()
                 return
 
-        if "json=1" in self.path or "/api" in self.path or "application/json" in self.headers.get("Accept", ""):
+        if "json=1" in clean_path or "/api" in clean_path or "application/json" in self.headers.get("Accept", ""):
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Access-Control-Allow-Origin", "*")
