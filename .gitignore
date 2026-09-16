@@ -1,9 +1,3 @@
-# Environment credentials (DO NOT COMMIT)
-.env
-*.env
-dispatch/.env
-dispatch/*.env
-
 # Python cache & locks
 __pycache__/
 *.py[cod]
