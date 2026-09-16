@@ -96,8 +96,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
     </header>
 
-    <!-- Status Hero Section (Seamless Light White Theme) -->
-    <section class="bg-white pt-6 pb-8 px-4 sm:px-8 border-b border-slate-200/60">
+    <!-- Status Hero Section (Seamless Match with Log Section Background) -->
+    <section class="bg-[#f8fafc] pt-6 pb-8 px-4 sm:px-8 border-b border-slate-200/60">
         <div class="max-w-6xl mx-auto text-center">
             <h1 class="text-xl sm:text-3xl font-semibold text-[#76AADA] tracking-normal mb-2">Sterling Services Operations Status</h1>
             <div id="bannerUpdatedText" class="text-xs sm:text-sm text-slate-500 font-medium mb-4">Updated 0s ago • PST Timezone</div>
@@ -138,12 +138,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     </div>
                 </div>
 
-                <!-- Badges Section -->
-                <div class="px-4 sm:px-6 py-3 border-b border-slate-100 flex flex-wrap gap-2 sm:gap-2.5 items-center bg-white">
-                    <span id="successBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">0 Success</span>
-                    <span id="errorBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">0 Error</span>
-                    <span id="partialBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">0 Partial</span>
-                    <span id="runningBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">1 Running</span>
+                <!-- Badges Section & FieldEdge Real-Time Login Indicator -->
+                <div class="px-4 sm:px-6 py-3 border-b border-slate-100 flex flex-wrap gap-2 sm:gap-2.5 items-center justify-between bg-white">
+                    <div class="flex flex-wrap gap-2 sm:gap-2.5 items-center">
+                        <span id="successBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">0 Success</span>
+                        <span id="errorBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">0 Error</span>
+                        <span id="partialBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">0 Partial</span>
+                        <span id="runningBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">1 Running</span>
+                    </div>
+                    <!-- Real-Time FieldEdge Login Status -->
+                    <div id="fieldedgeBadge" class="px-3 py-1 rounded-md text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 whitespace-nowrap">
+                        <span id="fieldedgeDot" class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span id="fieldedgeText">FieldEdge: Connected / Active Session</span>
+                    </div>
                 </div>
 
                 <!-- Progress Bar Section -->
@@ -216,18 +223,39 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const rawLastSync = data.last_run_pst || data.last_run || '-';
                 let cleanSync = String(rawLastSync).trim();
                 if (cleanSync !== '-') {
-                    cleanSync = cleanSync.replace(/\s*PST\s*PST/gi, ' PST').replace(/\s*PST$/gi, '') + ' PST';
+                    cleanSync = cleanSync.replace(/(\s*PST)+$/gi, '').trim() + ' PST';
                 }
                 document.getElementById('lastSyncTd').innerText = cleanSync;
 
                 const statusStr = p.status || data.last_status || 'running';
                 const msg = p.status_message || data.last_status || 'System Active';
                 
+                // Real-Time FieldEdge Login Status Badge
+                const feStatus = data.fieldedge_status || (msg.includes('Concurrent') || msg.includes('logged out') ? msg : 'Connected / Active Session');
+                const feBadge = document.getElementById('fieldedgeBadge');
+                const feDot = document.getElementById('fieldedgeDot');
+                const feText = document.getElementById('fieldedgeText');
+
+                if (feStatus.toLowerCase().includes('logged out') || feStatus.toLowerCase().includes('retry') || feStatus.toLowerCase().includes('pause') || msg.includes('Concurrent')) {
+                    feBadge.className = 'px-3 py-1 rounded-md text-[11px] sm:text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1.5 whitespace-nowrap';
+                    feDot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-ping';
+                    feText.innerText = 'FieldEdge: ' + (data.fieldedge_status || 'Session Logged Out (Wait 30m)');
+                } else if (feStatus.toLowerCase().includes('logg')) {
+                    feBadge.className = 'px-3 py-1 rounded-md text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200 flex items-center gap-1.5 whitespace-nowrap';
+                    feDot.className = 'w-2 h-2 rounded-full bg-[#76AADA] animate-pulse';
+                    feText.innerText = 'FieldEdge: Logging in...';
+                } else {
+                    feBadge.className = 'px-3 py-1 rounded-md text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 whitespace-nowrap';
+                    feDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+                    feText.innerText = 'FieldEdge: Connected / Active Session';
+                }
+
                 const statusPill = document.getElementById('statusPillTd');
                 const runningBadge = document.getElementById('runningBadge');
 
-                if (statusStr.includes('paused') || statusStr.includes('concurrent') || msg.includes('logged out')) {
-                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200" title="' + msg + '">PAUSED (30m Retry)</span>';
+                if (statusStr.includes('paused') || statusStr.includes('concurrent') || msg.includes('logged out') || msg.includes('Concurrent')) {
+                    const waitMsg = msg.includes('Retrying') ? msg : 'PAUSED (FieldEdge Login Retry in 30m)';
+                    statusPill.innerHTML = '<span class="px-2.5 py-1 rounded-md text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200" title="' + msg + '">' + waitMsg + '</span>';
                     runningBadge.className = 'px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200';
                     runningBadge.innerText = '1 Paused (Concurrent Login)';
                 } else if (statusStr === 'completed' || data.last_status === 'success') {
@@ -340,13 +368,15 @@ async def run_automation(args):
                 STATUS_DATA["last_status"] = f"error: {err_str}"
                 
                 # Check for session logout / concurrent login
-                if "login" in err_str.lower() or "session" in err_str.lower():
+                if "login" in err_str.lower() or "session" in err_str.lower() or "concurrent" in err_str.lower():
                     print("⚠️ FieldEdge single account concurrent login detected. Pausing for 30 minutes before auto-retry...")
                     for m in range(30, 0, -1):
-                        msg = f"⚠️ Session logged out (Concurrent login detected). Retrying automatic login in {m} min (PST)..."
+                        msg = f"⚠️ Session logged out (Concurrent login). Retrying FieldEdge login in {m} min..."
                         STATUS_DATA["progress"]["status"] = "paused_concurrent_login"
                         STATUS_DATA["progress"]["status_message"] = msg
+                        STATUS_DATA["fieldedge_status"] = f"Logged Out (Retrying login in {m}m)"
                         await asyncio.sleep(60)
+                    STATUS_DATA["fieldedge_status"] = "Retrying FieldEdge login now..."
 
             sleep_seconds = int(args.interval_hours * 3600)
             print(f"\n😴 Run complete. Waiting {args.interval_hours} hours until next run. (Press Ctrl+C to stop)")
