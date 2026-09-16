@@ -1,0 +1,19 @@
+[
+  {
+    "_comment_login": "FieldEdge login configuration for Dispatch Automation",
+    "fieldedge_login_url": "https://login.fieldedge.com/Account/Login",
+    "web_url": "https://login.fieldedge.com/Dispatch",
+    "dashboard_url": "https://login.fieldedge.com/Dashboard/",
+    "dispatch_board_create_wo_btn_xpath": "//button[contains(normalize-space(),'Create Work Order') or contains(normalize-space(),'Work Order')]",
+    "dispatch_board_customer_xpath": "//div[contains(@class,'customer-select') or contains(@class,'employee-vue-select')]",
+    "dispatch_board_immediate_action_xpath": "//div[@class[contains(.,'field-title')] and contains(normalize-space(),'Immediate Action')]/following::div[contains(@class,'v-select')][1]",
+    "dispatch_board_task_xpath": "//div[@class[contains(.,'field-title')] and contains(normalize-space(),'Task') and not(contains(normalize-space(),'Duration'))]/following::div[contains(@class,'v-select')][1]",
+    "dispatch_board_lead_source_xpath": "//div[@class[contains(.,'field-title')] and contains(normalize-space(),'Work Order Lead Source')]/following::div[contains(@class,'v-select')][1]",
+    "dispatch_board_priority_xpath": "//div[@class[contains(.,'field-title')] and contains(normalize-space(),'Priority')]/following::div[contains(@class,'v-select')][1]",
+    "dispatch_board_tech_name_xpath": "//div[@class[contains(.,'field-title')] and contains(normalize-space(),'Primary Tech')]/following::div[contains(@class,'v-select')][1]",
+    "dispatch_board_date_input_xpath": "//input[@name='Start Date'] | //input[@placeholder='Date']",
+    "dispatch_board_time_input_xpath": "//div[@class[contains(.,'field-title')] and contains(normalize-space(),'Start Time')]/following::input[1] | //input[@placeholder='Time']",
+    "dispatch_board_duration_input_xpath": "//div[@class[contains(.,'field-title')] and contains(normalize-space(),'Task Duration')]/following::input[contains(@class,'base-input')][1] | //td[contains(@class, 'new-assignment-only')]//input[@placeholder='0']",
+    "dispatch_board_save_btn_xpath": "//button[contains(@class,'confirm') and .//span[normalize-space()='Save']]"
+  }
+]
