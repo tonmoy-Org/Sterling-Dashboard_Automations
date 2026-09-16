@@ -92,21 +92,21 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }
     </style>
 </head>
-<body class="text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between font-normal relative" style="background: linear-gradient(180deg, rgba(15, 23, 42, 0.55) 0%, rgba(30, 41, 59, 0.45) 100%), url('/assets/arrival-window.jpg') center / cover no-repeat fixed;">
+<body class="text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between font-normal relative" style="background: linear-gradient(180deg, rgba(15, 23, 42, 0.35) 0%, rgba(30, 41, 59, 0.30) 100%), url('/assets/arrival-window.jpg') center / cover no-repeat fixed;">
 
-    <!-- Top Site Header (Glassmorphism Navbar) -->
-    <header class="bg-white/85 backdrop-blur-xl border-b border-slate-200/60 shadow-sm sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3 flex justify-between items-center">
+    <!-- Top Site Header (Frosted Glass Navbar - Full Background Image Visible) -->
+    <header class="bg-white/35 backdrop-blur-xl border-b border-white/30 shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3.5 sm:py-4 flex justify-between items-center">
             <!-- Left: Company Logo -->
             <div class="flex items-center">
                 <a href="javascript:void(0)" class="flex items-center">
-                    <img src="/assets/logo.png" alt="Sterling Septic & Plumbing, LLC" class="h-8 sm:h-9 w-auto object-contain" onerror="this.onerror=null; this.src='/assets/favicon.png';">
+                    <img src="/assets/logo.png" alt="Sterling Septic & Plumbing, LLC" class="h-14 sm:h-20 md:h-24 w-auto object-contain max-h-28" onerror="this.onerror=null; this.src='/assets/favicon.png';">
                 </a>
             </div>
 
             <!-- Right: Phone Call Button -->
             <div>
-                <a href="tel:2533424061" class="bg-[#76AADA] hover:bg-[#5c95c8] text-white px-4 sm:px-5 py-2 rounded-[5px] text-xs sm:text-sm font-bold shadow-md transition-all duration-200 inline-flex items-center gap-2">
+                <a href="tel:2533424061" class="bg-[#76AADA] hover:bg-[#5c95c8] text-white px-4 sm:px-5 py-2.5 rounded-[5px] text-xs sm:text-sm font-bold shadow-md transition-all duration-200 inline-flex items-center gap-2">
                     <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" viewBox="0 0 24 24">
                         <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                     </svg>
@@ -120,11 +120,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <main class="w-full py-6 sm:py-8 flex-grow">
         <div class="max-w-6xl mx-auto px-4 sm:px-8 space-y-6">
 
-            <!-- Hero Section (Clean Text Directly on Dark Overlay Background) -->
+            <!-- Hero Section (Clean Text Directly on Background Image) -->
             <div class="py-2 sm:py-4 text-center">
                 <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-2 drop-shadow-lg">Sterling Services Operations Status</h1>
-                <div id="bannerUpdatedText" class="text-xs sm:text-sm text-slate-200 font-semibold mb-3 drop-shadow">Updated 0s ago • PST Timezone</div>
-                <p class="text-xs sm:text-sm leading-relaxed text-slate-100 font-normal max-w-3xl mx-auto px-2 drop-shadow">
+                <div id="bannerUpdatedText" class="text-xs sm:text-sm text-[#76AADA] font-bold mb-3 drop-shadow-md">Updated 0s ago • PST Timezone</div>
+                <p class="text-xs sm:text-sm leading-relaxed text-slate-100 font-medium max-w-3xl mx-auto px-2 drop-shadow-md">
                     Welcome to the Sterling Septic & Plumbing LLC Dispatch Board Display Automation Status Page. This system automatically pre-creates 30-day static visual aid work orders and technician display schedules on the FieldEdge Dispatch Board to ensure smooth dispatch operations. Monitor live automation sync progress, active target dates, and real-time FieldEdge session status below.
                 </p>
             </div>
@@ -179,7 +179,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         <span>30-Day FieldEdge Display Pre-Creation Progress</span>
                         <span id="pctLabel">0%</span>
                     </div>
-                    <div class="w-full bg-slate-200/90 rounded-[5px] h-3.5 overflow-hidden p-0.5 shadow-inner">
+                    <div class="w-full bg-slate-200/70 rounded-[5px] h-2 overflow-hidden shadow-inner">
                         <div id="progressBarFill" class="bg-gradient-to-r from-[#76AADA] to-[#5c95c8] h-full rounded-[5px] transition-all duration-500 ease-out" style="width: 0%;"></div>
                     </div>
                 </div>
@@ -187,7 +187,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <!-- Table Wrap (Mobile Responsive Horizontal Scroll - Strictly Single Line Text) -->
                 <div class="overflow-x-auto w-full">
                     <table class="w-full min-w-[700px] text-left text-xs sm:text-sm text-slate-800 border-collapse">
-                        <thead class="bg-slate-100/90 text-slate-600 font-bold uppercase text-[10px] sm:text-[11px] tracking-wider border-b border-slate-200">
+                        <thead class="bg-white/40 backdrop-blur-md text-slate-700 font-bold uppercase text-[10px] sm:text-[11px] tracking-wider border-b border-slate-200/60">
                             <tr>
                                 <th class="px-4 sm:px-6 py-3.5 whitespace-nowrap">Scraper Name</th>
                                 <th class="px-4 sm:px-6 py-3.5 whitespace-nowrap">Active Target Date</th>
@@ -197,7 +197,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-200/70 bg-white/50">
-                            <tr class="hover:bg-white/90 transition-colors">
+                            <tr>
                                 <td class="px-4 sm:px-6 py-4 font-bold text-slate-900 whitespace-nowrap">dispatch-board-display-automation</td>
                                 <td id="activeDateTd" class="px-4 sm:px-6 py-4 font-medium text-slate-800 whitespace-nowrap">Today</td>
                                 <td id="statusPillTd" class="px-4 sm:px-6 py-4 whitespace-nowrap">
@@ -213,8 +213,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
     </main>
 
-    <!-- Small Compact Footer -->
-    <footer class="bg-white/85 backdrop-blur-xl border-t border-slate-200/60 py-3.5 text-center text-[11px] sm:text-xs font-medium text-slate-600">
+    <!-- Small Compact Footer (Frosted Glass with Visible Background) -->
+    <footer class="bg-white/35 backdrop-blur-xl border-t border-white/30 py-3.5 text-center text-[11px] sm:text-xs font-semibold text-slate-900 drop-shadow-sm">
         © 2026 Sterling Septic & Plumbing LLC • All rights reserved.
     </footer>
 
