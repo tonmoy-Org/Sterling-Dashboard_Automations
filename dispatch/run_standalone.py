@@ -94,19 +94,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body class="text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between font-normal relative" style="background: linear-gradient(180deg, rgba(15, 23, 42, 0.35) 0%, rgba(30, 41, 59, 0.30) 100%), url('/assets/arrival-window.jpg') center / cover no-repeat fixed;">
 
-    <!-- Top Site Header (Frosted Glass Navbar) -->
-    <header class="bg-white/95 backdrop-blur-xl border-b border-white/80 shadow-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3.5 sm:py-4 flex justify-between items-center">
+    <!-- Top Site Header (Frosted Glass Navbar - Full Background Image Visible) -->
+    <header class="bg-white/35 backdrop-blur-xl border-b border-white/30 shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3 flex justify-between items-center">
             <!-- Left: Company Logo -->
             <div class="flex items-center">
                 <a href="javascript:void(0)" class="flex items-center">
-                    <img src="/assets/logo.png" alt="Sterling Septic & Plumbing, LLC" class="h-12 sm:h-16 md:h-20 w-auto object-contain max-h-24" onerror="this.onerror=null; this.src='/assets/favicon.png';">
+                    <img src="/assets/logo.png" alt="Sterling Septic & Plumbing, LLC" class="h-12 sm:h-14 w-auto object-contain max-h-16" onerror="this.onerror=null; this.src='/assets/favicon.png';">
                 </a>
             </div>
 
             <!-- Right: Phone Call Button -->
             <div>
-                <a href="tel:2533424061" class="bg-[#76AADA] hover:bg-[#5c95c8] text-white px-4 sm:px-5 py-2.5 rounded-[5px] text-xs sm:text-sm font-bold shadow-md transition-all duration-200 inline-flex items-center gap-2">
+                <a href="tel:2533424061" class="bg-[#76AADA] hover:bg-[#5c95c8] text-white px-4 sm:px-5 py-2 rounded-[5px] text-xs sm:text-sm font-bold shadow-md transition-all duration-200 inline-flex items-center gap-2">
                     <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" viewBox="0 0 24 24">
                         <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                     </svg>
@@ -120,20 +120,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <main class="w-full py-6 sm:py-8 flex-grow">
         <div class="max-w-6xl mx-auto px-4 sm:px-8 space-y-6">
 
-            <!-- Hero Section (Frosted Glass Container for High Contrast & Ultra Professional UI) -->
-            <div class="bg-white/95 backdrop-blur-xl rounded-[5px] border border-white/80 shadow-2xl p-6 sm:p-8 text-center max-w-4xl mx-auto">
-                <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Sterling Services Operations Status</h1>
-                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[5px] bg-slate-100/90 border border-slate-200/90 font-bold text-xs sm:text-sm mb-3 shadow-sm">
-                    <span class="w-2.5 h-2.5 rounded-full bg-[#76AADA] animate-pulse"></span>
-                    <span id="bannerUpdatedText" class="text-slate-800 font-bold">Updated 0s ago • PST Timezone</span>
-                </div>
-                <p class="text-xs sm:text-sm leading-relaxed text-slate-700 font-normal max-w-3xl mx-auto">
+            <!-- Hero Section (Clean Text Directly on Background Image) -->
+            <div class="py-2 sm:py-4 text-center">
+                <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-2 drop-shadow-lg">Sterling Services Operations Status</h1>
+                <div id="bannerUpdatedText" class="text-xs sm:text-sm text-[#76AADA] font-bold mb-3 drop-shadow-md">Updated 0s ago • PST Timezone</div>
+                <p class="text-xs sm:text-sm leading-relaxed text-slate-100 font-medium max-w-3xl mx-auto px-2 drop-shadow-md">
                     Welcome to the Sterling Septic & Plumbing LLC Dispatch Board Display Automation Status Page. This system automatically pre-creates 30-day static visual aid work orders and technician display schedules on the FieldEdge Dispatch Board to ensure smooth dispatch operations. Monitor live automation sync progress, active target dates, and real-time FieldEdge session status below.
                 </p>
             </div>
 
             <!-- Execution Logs Glass Card -->
-            <div class="bg-white/95 backdrop-blur-xl rounded-[5px] border border-white/80 shadow-2xl overflow-hidden">
+            <div class="bg-white/92 backdrop-blur-xl rounded-[5px] border border-white/70 shadow-2xl overflow-hidden">
                 <!-- Card Header -->
                 <div class="bg-white/90 border-b border-slate-200/80 px-4 sm:px-6 py-3.5 sm:py-4 flex justify-between items-center">
                     <h2 class="text-xs sm:text-base font-bold text-slate-900">Automation Execution Logs</h2>
