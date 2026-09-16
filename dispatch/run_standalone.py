@@ -100,7 +100,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <!-- Left: Company Logo -->
             <div class="flex items-center">
                 <a href="javascript:void(0)" class="flex items-center">
-                    <img src="/assets/logo.png" alt="Sterling Septic & Plumbing, LLC" class="h-12 sm:h-14 w-auto object-contain max-h-16" onerror="this.onerror=null; this.src='/assets/favicon.png';">
+                    <img src="/assets/logo.png" alt="Sterling Septic & Plumbing, LLC" class="h-[42px] sm:h-[48px] w-auto object-contain max-h-[48px]" onerror="this.onerror=null; this.src='/assets/favicon.png';">
                 </a>
             </div>
 
