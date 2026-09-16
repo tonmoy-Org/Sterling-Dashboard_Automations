@@ -77,8 +77,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- Top Site Navbar (Matching Sterling Main Website Header) -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+    <!-- Top Site Header (Dark Navy Line on Top + Logo & Subscribe Button) -->
+    <header class="bg-white sticky top-0 z-50">
+        <!-- Dark Navy Bar at Very Top -->
+        <div class="bg-[#1c2d42] h-2.5 w-full"></div>
         <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3.5 flex justify-between items-center">
             <!-- Left: Company Logo -->
             <div class="flex items-center">
@@ -87,21 +89,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 </a>
             </div>
 
-            <!-- Right: Menu Links & Phone Number Button (No routing) -->
-            <div class="flex items-center space-x-3 sm:space-x-6">
-                <a href="javascript:void(0)" class="text-xs sm:text-sm font-bold text-slate-900 hover:text-sterling transition-colors hidden md:inline-block">Services</a>
-                <a href="javascript:void(0)" class="text-xs sm:text-sm font-bold text-slate-900 hover:text-sterling transition-colors hidden md:inline-block">Cities We Serve</a>
-                <a href="javascript:void(0)" class="text-xs sm:text-sm font-bold text-slate-900 hover:text-sterling transition-colors hidden sm:inline-block">Contact Us</a>
-                <a href="javascript:void(0)" class="text-xs sm:text-sm font-bold text-slate-900 hover:text-sterling transition-colors hidden sm:inline-block">Blog</a>
-                <a href="javascript:void(0)" class="bg-[#6ba4d8] hover:bg-[#5a93c7] text-white px-3.5 py-2 rounded-md text-xs sm:text-sm font-bold shadow-sm transition-all duration-200">
-                    (253) 342-4061
-                </a>
+            <!-- Right: Subscribe Button -->
+            <div>
+                <button class="bg-sterling hover:bg-[#124d93] text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm transition-all duration-200">
+                    Subscribe
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Status Hero Banner (Clean White Theme) -->
-    <section class="bg-white border-b border-slate-200 py-10 px-4 sm:px-8">
+    <!-- Status Hero Section (Seamless White Theme) -->
+    <section class="bg-white pt-4 pb-8 px-4 sm:px-8">
         <div class="max-w-3xl mx-auto text-center">
             <h1 class="text-2xl sm:text-4xl font-extrabold text-sterling tracking-tight mb-2">Sterling Services Operations Status</h1>
             <div id="bannerUpdatedText" class="text-xs sm:text-sm text-slate-500 font-medium mb-4">Updated 0s ago • PST Timezone</div>
@@ -111,24 +109,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
     </section>
 
-    <!-- Navigation Bar - LIVE UPDATES tab only -->
-    <nav class="bg-white border-b border-slate-200 shadow-sm">
-        <div class="max-w-6xl mx-auto flex justify-center">
-            <div class="text-sterling font-bold text-xs sm:text-sm border-b-2 border-sterling py-3.5 px-6 uppercase tracking-wider">
-                LIVE UPDATES
-            </div>
-        </div>
-    </nav>
-
     <!-- Main Container -->
     <main class="max-w-5xl mx-auto px-4 py-8 flex-grow w-full">
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <!-- Card Header -->
-            <div class="bg-sterling text-white px-6 py-4 flex justify-between items-center">
-                <h2 class="text-sm sm:text-base font-bold tracking-wide">Automation Execution Logs</h2>
-                <div class="text-xs text-blue-100 flex items-center gap-2">
+            <!-- Card Header (Clean White Theme) -->
+            <div class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
+                <h2 class="text-sm sm:text-base font-bold text-sterling tracking-wide">Automation Execution Logs</h2>
+                <div class="text-xs text-slate-500 flex items-center gap-2">
                     <span id="cardUpdatedText">Updated 0s ago</span>
-                    <button onclick="fetchStatus()" title="Refresh" class="hover:rotate-180 transition-transform duration-300">🔄</button>
+                    <button onclick="fetchStatus()" title="Refresh" class="hover:rotate-180 transition-transform duration-300 text-slate-600">🔄</button>
                 </div>
             </div>
 
