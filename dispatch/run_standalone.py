@@ -92,7 +92,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }
     </style>
 </head>
-<body class="bg-[#f8fafc] text-slate-700 font-sans antialiased min-h-screen flex flex-col justify-between font-normal">
+<body class="text-slate-700 font-sans antialiased min-h-screen flex flex-col justify-between font-normal relative" style="background: linear-gradient(rgba(248, 250, 252, 0.88), rgba(248, 250, 252, 0.88)), url('/assets/arrival-window.jpg') center / cover no-repeat fixed;">
 
     <!-- Top Site Header (Glassmorphism Navbar - Logo & Subscribe Button) -->
     <header class="bg-white/70 backdrop-blur-xl backdrop-saturate-150 sticky top-0 z-50 border-b border-slate-200/50 shadow-sm">
@@ -117,7 +117,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </header>
 
     <!-- Status Hero Section (Seamless Match with Log Section Background) -->
-    <section class="bg-[#f8fafc] pt-6 pb-8 px-4 sm:px-8 border-b border-slate-200/60">
+    <section class="pt-6 pb-8 px-4 sm:px-8 border-b border-slate-200/60 bg-transparent">
         <div class="max-w-6xl mx-auto text-center">
             <h1 class="text-xl sm:text-3xl font-semibold text-slate-900 tracking-normal mb-2">Sterling Services Operations Status</h1>
             <div id="bannerUpdatedText" class="text-xs sm:text-sm text-slate-500 font-medium mb-4">Updated 0s ago • PST Timezone</div>
@@ -128,7 +128,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </section>
 
     <!-- Main Section (Full Page Background & Aligned with Navbar Width) -->
-    <main class="w-full bg-[#f8fafc] py-6 sm:py-8 flex-grow">
+    <main class="w-full py-6 sm:py-8 flex-grow bg-transparent">
         <div class="max-w-6xl mx-auto px-4 sm:px-8">
             <div class="bg-white rounded-[5px] border border-slate-200 shadow-sm overflow-hidden">
                 <!-- Card Header -->
@@ -322,7 +322,13 @@ class StatusHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             
             if os.path.exists(asset_path):
                 self.send_response(200)
-                content_type = "image/png" if asset_path.endswith(".png") else "image/x-icon"
+                ext = os.path.splitext(asset_path)[1].lower()
+                if ext in (".jpg", ".jpeg"):
+                    content_type = "image/jpeg"
+                elif ext == ".png":
+                    content_type = "image/png"
+                else:
+                    content_type = "image/x-icon"
                 self.send_header("Content-Type", content_type)
                 self.send_header("Cache-Control", "public, max-age=86400")
                 self.end_headers()
