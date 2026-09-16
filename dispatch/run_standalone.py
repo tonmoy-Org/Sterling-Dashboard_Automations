@@ -63,9 +63,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Top Hero Banner matching Sterling design */
+        /* Top Hero Banner matching exact Sterling design */
         .hero-banner {
-            background: linear-gradient(180deg, #1d65c1 0%, #1754a6 100%);
+            background: #1966c0;
             color: #ffffff;
             padding: 24px 32px 48px 32px;
             text-align: center;
@@ -75,33 +75,30 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             justify-content: space-between;
             align-items: center;
             max-width: 1100px;
-            margin: 0 auto 32px auto;
+            margin: 0 auto 28px auto;
         }
         .logo-box {
-            background: #ffffff;
-            padding: 6px 16px;
-            border-radius: 8px;
+            background: transparent;
             display: flex;
             align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
         }
         .logo-box img {
-            max-height: 42px;
+            max-height: 46px;
             object-fit: contain;
         }
         .btn-subscribe {
-            background: #2563eb;
+            background: #2375d8;
             color: #ffffff;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 9px 24px;
             border-radius: 6px;
             font-weight: 700;
             font-size: 14px;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
             transition: background 0.2s;
         }
-        .btn-subscribe:hover { background: #1d4ed8; }
+        .btn-subscribe:hover { background: #1d65c1; }
 
         .banner-title {
             font-size: 32px;
@@ -111,7 +108,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }
         .banner-updated {
             font-size: 13px;
-            color: #cbd5e1;
+            color: #dbeafe;
             margin-bottom: 18px;
             font-weight: 500;
         }
@@ -120,11 +117,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin: 0 auto;
             font-size: 13.5px;
             line-height: 1.6;
-            color: #e2e8f0;
+            color: #eff6ff;
             font-weight: 400;
         }
 
-        /* Navigation Tabs Bar matching Sterling design */
+        /* Navigation Tabs Bar - Only LIVE UPDATES as requested */
         .nav-tabs-bar {
             background: #ffffff;
             border-bottom: 1px solid #e2e8f0;
@@ -133,24 +130,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .nav-tabs-container {
             display: flex;
             justify-content: center;
-            gap: 36px;
             max-width: 1100px;
             margin: 0 auto;
         }
         .tab-btn {
-            padding: 16px 6px;
+            padding: 16px 20px;
             font-size: 13px;
             font-weight: 700;
-            color: #64748b;
+            color: #1966c0;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s;
-        }
-        .tab-btn.active {
-            color: #1d65c1;
-            border-bottom-color: #1d65c1;
+            border-bottom: 3px solid #1966c0;
         }
 
         /* Main Container */
@@ -160,7 +151,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             padding: 0 16px;
         }
 
-        /* Automation Card */
+        /* Automation Log Card */
         .card {
             background: #ffffff;
             border-radius: 10px;
@@ -169,7 +160,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             overflow: hidden;
         }
         .card-header {
-            background: #1d65c1;
+            background: #1966c0;
             color: #ffffff;
             padding: 14px 24px;
             display: flex;
@@ -261,7 +252,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             overflow: hidden;
         }
         .progress-bar-fill {
-            background: linear-gradient(90deg, #1d65c1, #2563eb);
+            background: linear-gradient(90deg, #1966c0, #2563eb);
             height: 100%;
             transition: width 0.5s ease;
         }
@@ -312,7 +303,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             </div>
             <button class="btn-subscribe">Subscribe</button>
         </div>
-        <h1 class="banner-title">Sterling Septic & Plumbing LLC</h1>
+        <h1 class="banner-title">Sterling Services Operations Status</h1>
         <div class="banner-updated" id="bannerUpdatedText">Updated 0s ago • PST Timezone</div>
         <p class="banner-desc">
             Welcome to the Sterling Septic & Plumbing LLC Status Page. Bookmark or subscribe to this page for the latest on service performance and any major issues affecting your plumbing needs. We'll do our best to post updates immediately, but please note there may be a delay as we diagnose problems.
@@ -321,10 +312,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     <div class="nav-tabs-bar">
         <div class="nav-tabs-container">
-            <div class="tab-btn active">LIVE UPDATES</div>
-            <div class="tab-btn">BUSINESS AUDITS</div>
-            <div class="tab-btn">LIVE UPTIME</div>
-            <div class="tab-btn">HISTORY</div>
+            <div class="tab-btn">LIVE UPDATES</div>
         </div>
     </div>
 
