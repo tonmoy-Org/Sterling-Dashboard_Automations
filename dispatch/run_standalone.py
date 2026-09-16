@@ -22,6 +22,7 @@ _dispatch_dir = os.path.dirname(os.path.abspath(__file__))
 if _dispatch_dir not in sys.path:
     sys.path.insert(0, _dispatch_dir)
 
+from base_scraper import PST_TZ, get_pst_now
 from dispatch_board_display_automation_scraper import DispatchBoardDisplayAutomationScraper
 
 STATUS_DATA = {
@@ -30,6 +31,7 @@ STATUS_DATA = {
     "mode": "DRY RUN",
     "days_configured": 30,
     "last_run": None,
+    "last_run_pst": None,
     "last_status": "initialized",
     "progress": {
         "current_day": 0,
@@ -49,225 +51,362 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sterling Dispatch Automation Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Sterling Septic & Plumbing LLC Status</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #0b0f19;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.12) 0px, transparent 50%);
-            color: #f8fafc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 24px;
-        }
-        .container {
-            width: 100%;
-            max-width: 580px;
-        }
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 24px;
-        }
-        .brand-icon {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #0284c7, #6366f1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 8px 20px -4px rgba(2, 132, 199, 0.4);
-        }
-        .brand-text h1 { font-size: 19px; font-weight: 800; letter-spacing: -0.5px; color: #ffffff; }
-        .brand-text p { font-size: 13px; color: #94a3b8; font-weight: 500; }
-        
-        .card {
-            background: rgba(30, 41, 59, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .status-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .status-title { font-size: 15px; font-weight: 600; color: #cbd5e1; }
-        .badge-live {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #34d399;
-            padding: 6px 16px;
-            border-radius: 9999px;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            background: #34d399;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #34d399;
-            animation: pulse 1.8s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.25); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.8; }
-        }
-
-        .progress-block { margin-bottom: 32px; }
-        .progress-labels {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 10px;
-        }
-        .progress-title { font-size: 14px; font-weight: 600; color: #94a3b8; }
-        .progress-pct { font-size: 32px; font-weight: 800; color: #38bdf8; letter-spacing: -1px; }
-
-        .progress-track {
-            background: #0f172a;
-            height: 16px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 2px;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #38bdf8, #818cf8, #a855f7);
-            border-radius: 6px;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-        .metric-card {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 14px;
-            padding: 20px;
-            transition: transform 0.2s ease;
-        }
-        .metric-card:hover { transform: translateY(-2px); }
-        .metric-value {
-            font-size: 24px;
-            font-weight: 800;
+        /* Top Hero Banner matching Sterling design */
+        .hero-banner {
+            background: linear-gradient(180deg, #1d65c1 0%, #1754a6 100%);
             color: #ffffff;
-            letter-spacing: -0.5px;
+            padding: 24px 32px 48px 32px;
+            text-align: center;
         }
-        .metric-label {
-            font-size: 11px;
+        .banner-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto 32px auto;
+        }
+        .logo-box {
+            background: #ffffff;
+            padding: 6px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        }
+        .logo-box img {
+            max-height: 42px;
+            object-fit: contain;
+        }
+        .btn-subscribe {
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            padding: 9px 24px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            transition: background 0.2s;
+        }
+        .btn-subscribe:hover { background: #1d4ed8; }
+
+        .banner-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: -0.6px;
+        }
+        .banner-updated {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 18px;
+            font-weight: 500;
+        }
+        .banner-desc {
+            max-width: 760px;
+            margin: 0 auto;
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: #e2e8f0;
+            font-weight: 400;
+        }
+
+        /* Navigation Tabs Bar matching Sterling design */
+        .nav-tabs-bar {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .nav-tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 36px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .tab-btn {
+            padding: 16px 6px;
+            font-size: 13px;
             font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
-            margin-top: 6px;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            color: #1d65c1;
+            border-bottom-color: #1d65c1;
         }
 
-        .live-log-bar {
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            padding: 16px 20px;
+        /* Main Container */
+        .main-container {
+            max-width: 1080px;
+            margin: 36px auto;
+            padding: 0 16px;
+        }
+
+        /* Automation Card */
+        .card {
+            background: #ffffff;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+        .card-header {
+            background: #1d65c1;
+            color: #ffffff;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header h2 { font-size: 15px; font-weight: 700; }
+        .header-updated {
+            font-size: 12.5px;
+            color: #e2e8f0;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 6px;
         }
-        .log-icon { font-size: 18px; }
-        .log-text { font-size: 14px; font-weight: 500; color: #cbd5e1; }
-        .footer-note { text-align: center; margin-top: 20px; font-size: 12px; color: #475569; }
+        .spin-icon { cursor: pointer; transition: transform 0.4s ease; }
+        .spin-icon:hover { transform: rotate(180deg); }
+
+        /* Filter Controls Bar */
+        .controls-bar {
+            padding: 16px 24px;
+            background: #fafafa;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .input-search {
+            padding: 8px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 13px;
+            width: 250px;
+            outline: none;
+            font-family: inherit;
+        }
+        .select-filter {
+            padding: 8px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 13px;
+            background: #ffffff;
+            outline: none;
+            font-family: inherit;
+        }
+
+        /* Badges Section */
+        .badges-bar {
+            padding: 16px 24px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            border-bottom: 1px solid #f1f5f9;
+            flex-wrap: wrap;
+        }
+        .badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .badge-success { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+        .badge-error { background: #ffe4e6; color: #be123c; border: 1px solid #fecdd3; }
+        .badge-partial { background: #fef9c3; color: #a16207; border: 1px solid #fef08a; }
+        .badge-running { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+        .badge-warning { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+
+        /* Progress Bar Section */
+        .progress-box {
+            padding: 20px 24px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .progress-header-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+        .progress-bar-bg {
+            background: #e2e8f0;
+            height: 14px;
+            border-radius: 7px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #1d65c1, #2563eb);
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        /* Data Table */
+        .table-wrap { width: 100%; overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+        th {
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 700;
+            padding: 14px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        td {
+            padding: 16px 24px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+            font-weight: 500;
+        }
+        tr:hover td { background: #f8fafc; }
+        .pst-tag { color: #64748b; font-size: 12px; font-weight: 600; margin-left: 4px; }
+
+        /* Footer */
+        .site-footer {
+            text-align: center;
+            padding: 32px 16px;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="brand">
-            <div class="brand-icon">⚡</div>
-            <div class="brand-text">
-                <h1>Sterling Septic & Plumbing</h1>
-                <p>Dispatch Board Display Automation</p>
-            </div>
-        </div>
 
+    <div class="hero-banner">
+        <div class="banner-top-bar">
+            <div class="logo-box">
+                <img src="/assets/logo.png" alt="Sterling Septic & Plumbing LLC" onerror="this.onerror=null; this.src='/assets/favicon.png';">
+            </div>
+            <button class="btn-subscribe">Subscribe</button>
+        </div>
+        <h1 class="banner-title">Sterling Septic & Plumbing LLC</h1>
+        <div class="banner-updated" id="bannerUpdatedText">Updated 0s ago • PST Timezone</div>
+        <p class="banner-desc">
+            Welcome to the Sterling Septic & Plumbing LLC Status Page. Bookmark or subscribe to this page for the latest on service performance and any major issues affecting your plumbing needs. We'll do our best to post updates immediately, but please note there may be a delay as we diagnose problems.
+        </p>
+    </div>
+
+    <div class="nav-tabs-bar">
+        <div class="nav-tabs-container">
+            <div class="tab-btn active">LIVE UPDATES</div>
+            <div class="tab-btn">BUSINESS AUDITS</div>
+            <div class="tab-btn">LIVE UPTIME</div>
+            <div class="tab-btn">HISTORY</div>
+        </div>
+    </div>
+
+    <div class="main-container">
         <div class="card">
-            <div class="status-header">
-                <span class="status-title">System Execution Status</span>
-                <div class="badge-live" id="modeBadge">
-                    <div class="pulse-dot"></div>
-                    <span id="badgeText">LIVE AUTOMATION</span>
+            <div class="card-header">
+                <h2>Automation Execution Logs</h2>
+                <div class="header-updated">
+                    <span id="cardUpdatedText">Updated 0s ago</span>
+                    <span class="spin-icon" onclick="fetchStatus()">🔄</span>
                 </div>
             </div>
 
-            <div class="progress-block">
-                <div class="progress-labels">
-                    <span class="progress-title">30-Day Pre-Creation Progress</span>
-                    <span class="progress-pct" id="pctText">0%</span>
+            <div class="controls-bar">
+                <input type="text" class="input-search" placeholder="Filter by scraper name..." value="dispatch-board-display-automation">
+                <select class="select-filter">
+                    <option>All statuses</option>
+                    <option>Running</option>
+                    <option>Success</option>
+                    <option>Error</option>
+                </select>
+                <select class="select-filter">
+                    <option>10 per scraper</option>
+                    <option>25 per scraper</option>
+                    <option>50 per scraper</option>
+                </select>
+            </div>
+
+            <div class="badges-bar">
+                <span class="badge badge-success" id="successBadge">0 Success</span>
+                <span class="badge badge-error" id="errorBadge">0 Error</span>
+                <span class="badge badge-partial" id="partialBadge">0 Partial</span>
+                <span class="badge badge-running" id="runningBadge">1 Running</span>
+            </div>
+
+            <div class="progress-box">
+                <div class="progress-header-row">
+                    <span>30-Day FieldEdge Display Pre-Creation Progress</span>
+                    <span id="pctLabel">0%</span>
                 </div>
-                <div class="progress-track">
-                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
                 </div>
             </div>
 
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-value" id="daysProcessedVal">0 / 30</div>
-                    <div class="metric-label">Completed Days</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="daysRemainingVal">30 Days</div>
-                    <div class="metric-label">Remaining to Create</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="activeDateVal">-</div>
-                    <div class="metric-label">Active Target Date</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="lastSyncVal">-</div>
-                    <div class="metric-label">Last Synchronization</div>
-                </div>
-            </div>
-
-            <div class="live-log-bar">
-                <span class="log-icon">⚙️</span>
-                <span class="log-text" id="statusMsg">Initializing automation engine...</span>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Scraper Name</th>
+                            <th>Active Target Date (PST)</th>
+                            <th>Status</th>
+                            <th>Batch Progress</th>
+                            <th>Last Sync Time (PST)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>dispatch-board-display-automation</strong></td>
+                            <td id="activeDateTd">-</td>
+                            <td id="statusPillTd"><span class="badge badge-running">RUNNING</span></td>
+                            <td id="progressTd">Day 0 of 30 (30 Days Left)</td>
+                            <td id="lastSyncTd">- <span class="pst-tag">PST</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="footer-note">Auto-refreshing live metrics every 2s • Connected to VPS</div>
+    </div>
+
+    <div class="site-footer">
+        © 2026 Sterling Septic & Plumbing LLC • All rights reserved.
     </div>
 
     <script>
-        async function updateDashboard() {
+        let lastFetchTime = Date.now();
+        
+        async function fetchStatus() {
             try {
                 const res = await fetch('/?json=1');
                 const data = await res.json();
-                
-                document.getElementById('badgeText').innerText = (data.mode || 'LIVE') + ' RUNNING';
+                lastFetchTime = Date.now();
                 
                 const p = data.progress || {};
                 const curDay = p.current_day || 0;
@@ -275,20 +414,53 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const rem = p.remaining_days !== undefined ? p.remaining_days : (total - curDay);
                 const pct = p.percent_complete !== undefined ? p.percent_complete : 0;
                 
-                document.getElementById('pctText').innerText = pct + '%';
-                document.getElementById('progressFill').style.width = pct + '%';
+                document.getElementById('successBadge').innerText = curDay + ' Success';
+                document.getElementById('pctLabel').innerText = pct + '%';
+                document.getElementById('progressBarFill').style.width = pct + '%';
                 
-                document.getElementById('daysProcessedVal').innerText = curDay + ' / ' + total;
-                document.getElementById('daysRemainingVal').innerText = rem + ' Days Left';
-                document.getElementById('activeDateVal').innerText = p.current_date || '-';
-                document.getElementById('lastSyncVal').innerText = data.last_run ? data.last_run.split(' ')[1] : '-';
-                document.getElementById('statusMsg').innerText = p.status_message || data.last_status || 'System Active';
+                document.getElementById('activeDateTd').innerText = p.current_date || 'Today';
+                document.getElementById('progressTd').innerText = 'Day ' + curDay + ' of ' + total + ' (' + rem + ' Days Left)';
+                document.getElementById('lastSyncTd').innerHTML = (data.last_run_pst || data.last_run || '-') + ' <span class="pst-tag">PST</span>';
+
+                const statusStr = p.status || data.last_status || 'running';
+                const msg = p.status_message || data.last_status || 'System Active';
+                
+                const statusPill = document.getElementById('statusPillTd');
+                const runningBadge = document.getElementById('runningBadge');
+
+                if (statusStr.includes('paused') || statusStr.includes('concurrent') || msg.includes('logged out')) {
+                    statusPill.innerHTML = '<span class="badge badge-warning" title="' + msg + '">PAUSED (30m Retry)</span>';
+                    runningBadge.className = 'badge badge-warning';
+                    runningBadge.innerText = '1 Paused (Concurrent Login)';
+                } else if (statusStr === 'completed' || data.last_status === 'success') {
+                    statusPill.innerHTML = '<span class="badge badge-success">COMPLETED</span>';
+                    runningBadge.className = 'badge badge-success';
+                    runningBadge.innerText = '0 Running (Finished)';
+                } else if (statusStr.includes('error')) {
+                    statusPill.innerHTML = '<span class="badge badge-error">ERROR</span>';
+                    runningBadge.className = 'badge badge-error';
+                    runningBadge.innerText = '1 Error';
+                } else {
+                    statusPill.innerHTML = '<span class="badge badge-running">RUNNING</span>';
+                    runningBadge.className = 'badge badge-running';
+                    runningBadge.innerText = '1 Running';
+                }
+
             } catch (err) {
-                console.error('Error updating status:', err);
+                console.error('Failed to fetch status:', err);
             }
         }
-        setInterval(updateDashboard, 2000);
-        updateDashboard();
+
+        function updateRelativeTime() {
+            const elapsedSec = Math.floor((Date.now() - lastFetchTime) / 1000);
+            const text = 'Updated ' + elapsedSec + 's ago';
+            document.getElementById('bannerUpdatedText').innerText = text + ' • PST Timezone';
+            document.getElementById('cardUpdatedText').innerText = text;
+        }
+
+        setInterval(fetchStatus, 3000);
+        setInterval(updateRelativeTime, 1000);
+        fetchStatus();
     </script>
 </body>
 </html>
@@ -296,6 +468,22 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 class StatusHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
+        if self.path.startswith("/assets/") or self.path in ("/favicon.ico", "/logo.png", "/favicon.png"):
+            asset_name = os.path.basename(self.path)
+            asset_path = os.path.join(_dispatch_dir, "assets", asset_name)
+            if not os.path.exists(asset_path):
+                asset_path = os.path.join(_dispatch_dir, "assets", "logo.png" if "logo" in asset_name else "favicon.png")
+            
+            if os.path.exists(asset_path):
+                self.send_response(200)
+                content_type = "image/png" if asset_path.endswith(".png") else "image/x-icon"
+                self.send_header("Content-Type", content_type)
+                self.send_header("Cache-Control", "public, max-age=86400")
+                self.end_headers()
+                with open(asset_path, "rb") as f:
+                    self.wfile.write(f.read())
+                return
+
         if "json=1" in self.path or "/api" in self.path or "application/json" in self.headers.get("Accept", ""):
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
@@ -328,6 +516,7 @@ def start_status_server(port: int):
 
 def on_progress_update(progress_dict):
     STATUS_DATA["progress"] = progress_dict
+    STATUS_DATA["last_run_pst"] = get_pst_now().strftime("%Y-%m-%d %I:%M:%S %p PST")
 
 async def run_automation(args):
     STATUS_DATA["mode"] = "LIVE" if args.live else "DRY RUN"
@@ -339,23 +528,35 @@ async def run_automation(args):
     if args.loop:
         print(f"🔄 Loop Mode enabled. Running every {args.interval_hours} hours to maintain {args.days} pre-created days...")
         while True:
-            now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            print(f"\n⏰ [{now_str}] Starting automation run for {args.days} days...")
-            STATUS_DATA["last_run"] = now_str
+            now_pst = get_pst_now().strftime("%Y-%m-%d %I:%M:%S %p PST")
+            print(f"\n⏰ [{now_pst}] Starting automation run for {args.days} days...")
+            STATUS_DATA["last_run"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            STATUS_DATA["last_run_pst"] = now_pst
             STATUS_DATA["last_status"] = "running"
             try:
                 await scraper.run(days=args.days, dry_run=not args.live, start_date_str=args.start_date, on_progress=on_progress_update)
                 STATUS_DATA["last_status"] = "success"
             except Exception as e:
-                print(f"❌ Error during scheduled run: {e}")
-                STATUS_DATA["last_status"] = f"error: {str(e)}"
+                err_str = str(e)
+                print(f"❌ Error during scheduled run: {err_str}")
+                STATUS_DATA["last_status"] = f"error: {err_str}"
+                
+                # Check for session logout / concurrent login
+                if "login" in err_str.lower() or "session" in err_str.lower():
+                    print("⚠️ FieldEdge single account concurrent login detected. Pausing for 30 minutes before auto-retry...")
+                    for m in range(30, 0, -1):
+                        msg = f"⚠️ Session logged out (Concurrent login detected). Retrying automatic login in {m} min (PST)..."
+                        STATUS_DATA["progress"]["status"] = "paused_concurrent_login"
+                        STATUS_DATA["progress"]["status_message"] = msg
+                        await asyncio.sleep(60)
 
             sleep_seconds = int(args.interval_hours * 3600)
             print(f"\n😴 Run complete. Waiting {args.interval_hours} hours until next run. (Press Ctrl+C to stop)")
             await asyncio.sleep(sleep_seconds)
     else:
-        now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        STATUS_DATA["last_run"] = now_str
+        now_pst = get_pst_now().strftime("%Y-%m-%d %I:%M:%S %p PST")
+        STATUS_DATA["last_run"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        STATUS_DATA["last_run_pst"] = now_pst
         STATUS_DATA["last_status"] = "running"
         try:
             await scraper.run(days=args.days, dry_run=not args.live, start_date_str=args.start_date, on_progress=on_progress_update)

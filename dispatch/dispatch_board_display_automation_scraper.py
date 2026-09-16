@@ -981,8 +981,45 @@ class DispatchBoardDisplayAutomationScraper(BaseScraper):
 
         except Exception as err:
             print(f"❌ Error in fill_and_save_work_order for '{customer_name}': {err}")
-            await self.ensure_clean_dispatch_board(force_reload=True)
-            return False
+    async def check_and_handle_session(self, on_progress: Optional[Callable] = None) -> bool:
+        """Check if FieldEdge logged out (e.g. concurrent login from another location). If logged out, wait 30m and retry."""
+        if not self.page:
+            return True
+        current_url = self.page.url or ""
+        if "Login" in current_url or "Account/Login" in current_url:
+            print("⚠️ FieldEdge logout detected! (Single account concurrent login from another device).")
+            try:
+                print("🔄 Attempting immediate re-login...")
+                await self.login_fieldedge()
+                if "Login" not in self.page.url:
+                    print("✅ FieldEdge session restored!")
+                    return True
+            except Exception as e:
+                print(f"⚠️ Immediate re-login failed ({e}). Starting 30-minute retry countdown...")
+
+            for m in range(30, 0, -1):
+                msg = f"⚠️ Session logged out (Concurrent login detected). Retrying automatic login in {m} minute(s) (PST)..."
+                print(f"⏳ [{self.get_pst_now().strftime('%I:%M:%S %p PST')}] {msg}")
+                if hasattr(self, "progress_info"):
+                    self.progress_info["status"] = "paused_concurrent_login"
+                    self.progress_info["status_message"] = msg
+                    if on_progress:
+                        try:
+                            on_progress(self.progress_info)
+                        except Exception:
+                            pass
+                await asyncio.sleep(60)
+
+            print("🔄 30 minutes completed. Re-initializing browser & attempting automatic login...")
+            try:
+                await self.initialize()
+                await self.login_fieldedge()
+                print("✅ Re-login successful after 30m wait!")
+                return True
+            except Exception as login_err:
+                print(f"❌ Re-login attempt failed: {login_err}")
+                return False
+        return True
 
     async def run(self, days: int = 30, dry_run: bool = False, active_techs: Optional[List[str]] = None, start_date_str: Optional[str] = None, on_progress: Optional[Callable] = None):
         """
