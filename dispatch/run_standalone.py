@@ -313,6 +313,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 """
 
 class StatusHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
+    def do_HEAD(self):
+        self.do_GET()
+
     def do_GET(self):
         clean_path = self.path
         if clean_path.startswith("/dispatch"):
