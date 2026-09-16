@@ -12,7 +12,7 @@ import random
 from datetime import datetime, timedelta
 import time
 import traceback
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Callable
 
 if sys.stdout and hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
@@ -984,7 +984,7 @@ class DispatchBoardDisplayAutomationScraper(BaseScraper):
             await self.ensure_clean_dispatch_board(force_reload=True)
             return False
 
-    async def run(self, days: int = 30, dry_run: bool = False, active_techs: Optional[List[str]] = None, start_date_str: Optional[str] = None):
+    async def run(self, days: int = 30, dry_run: bool = False, active_techs: Optional[List[str]] = None, start_date_str: Optional[str] = None, on_progress: Optional[Callable] = None):
         """
         Main execution method for Dispatch Board Display Automation.
         """
@@ -992,6 +992,22 @@ class DispatchBoardDisplayAutomationScraper(BaseScraper):
         _error_occurred = None
         _records_processed = 0
         _details = {"processed_dates": []}
+
+        self.progress_info = {
+            "current_day": 0,
+            "total_days": days,
+            "current_date": None,
+            "completed_days": 0,
+            "remaining_days": days,
+            "percent_complete": 0.0,
+            "status": "starting",
+            "status_message": f"Initializing automation for {days} days..."
+        }
+        if on_progress:
+            try:
+                on_progress(self.progress_info)
+            except Exception:
+                pass
 
         settings = self.template_data.get("general_settings", {})
         task = settings.get("task", "8 - INTERNAL")
@@ -1186,7 +1202,23 @@ class DispatchBoardDisplayAutomationScraper(BaseScraper):
                 date_str = f"{current_date.month}/{current_date.day}/{current_date.strftime('%y')}"
                 db_date_key = current_date.strftime("%Y-%m-%d")
 
-                print(f"\n--- Processing Date: {date_str} ---")
+                self.progress_info = {
+                    "current_day": d + 1,
+                    "total_days": days,
+                    "current_date": date_str,
+                    "completed_days": d,
+                    "remaining_days": days - (d + 1),
+                    "percent_complete": round(((d + 1) / days) * 100, 1),
+                    "status": "processing",
+                    "status_message": f"Processing Day {d + 1} of {days} ({date_str})"
+                }
+                if on_progress:
+                    try:
+                        on_progress(self.progress_info)
+                    except Exception:
+                        pass
+
+                print(f"\n--- Processing Date: {date_str} (Day {d + 1}/{days}) ---")
 
                 template_processed_counts = {}
 
@@ -1489,6 +1521,21 @@ class DispatchBoardDisplayAutomationScraper(BaseScraper):
                     _records_processed += 1
 
             print("\n🎉 Dispatch Board Display Automation Finished Successfully!")
+            self.progress_info = {
+                "current_day": days,
+                "total_days": days,
+                "current_date": date_str if 'date_str' in locals() else None,
+                "completed_days": days,
+                "remaining_days": 0,
+                "percent_complete": 100.0,
+                "status": "completed",
+                "status_message": f"Successfully completed all {days} days!"
+            }
+            if on_progress:
+                try:
+                    on_progress(self.progress_info)
+                except Exception:
+                    pass
         except Exception as e:
             print(f"Scraping error: {e}")
             _error_occurred = f"{str(e)}\n{traceback.format_exc()}"
