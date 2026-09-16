@@ -75,21 +75,21 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }
     </script>
 </head>
-<body class="bg-slate-50 text-slate-700 font-sans antialiased min-h-screen flex flex-col justify-between font-normal">
+<body class="bg-[#f8fafc] text-slate-700 font-sans antialiased min-h-screen flex flex-col justify-between font-normal">
 
     <!-- Top Site Header (Pure White - Logo & Subscribe Button) -->
-    <header class="bg-white sticky top-0 z-50 shadow-sm">
+    <header class="bg-white sticky top-0 z-50 shadow-sm border-b border-slate-200/60">
         <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3.5 flex justify-between items-center">
             <!-- Left: Company Logo -->
             <div class="flex items-center">
                 <a href="javascript:void(0)" class="flex items-center">
-                    <img src="/assets/logo.png" alt="Sterling Septic & Plumbing, LLC" class="h-9 sm:h-11 w-auto object-contain" onerror="this.onerror=null; this.src='/assets/favicon.png';">
+                    <img src="/assets/logo.png" alt="Sterling Septic & Plumbing, LLC" class="h-8 sm:h-10 w-auto object-contain" onerror="this.onerror=null; this.src='/assets/favicon.png';">
                 </a>
             </div>
 
             <!-- Right: Subscribe Button -->
             <div>
-                <button class="bg-[#76AADA] hover:bg-[#5c95c8] text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition-all duration-200">
+                <button class="bg-[#76AADA] hover:bg-[#5c95c8] text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold shadow-sm transition-all duration-200">
                     Subscribe
                 </button>
             </div>
@@ -97,93 +97,97 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </header>
 
     <!-- Status Hero Section (Seamless Light White Theme) -->
-    <section class="bg-white pt-6 pb-8 px-4 sm:px-8">
-        <div class="max-w-3xl mx-auto text-center">
-            <h1 class="text-2xl sm:text-3xl font-semibold text-[#76AADA] tracking-normal mb-2">Sterling Services Operations Status</h1>
+    <section class="bg-white pt-6 pb-8 px-4 sm:px-8 border-b border-slate-200/60">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-xl sm:text-3xl font-semibold text-[#76AADA] tracking-normal mb-2">Sterling Services Operations Status</h1>
             <div id="bannerUpdatedText" class="text-xs sm:text-sm text-slate-500 font-medium mb-4">Updated 0s ago • PST Timezone</div>
-            <p class="text-xs sm:text-sm leading-relaxed text-slate-600 font-normal">
+            <p class="text-xs sm:text-sm leading-relaxed text-slate-600 font-normal max-w-3xl mx-auto px-2">
                 Welcome to the Sterling Septic & Plumbing LLC Status Page. Bookmark or subscribe to this page for the latest on service performance and any major issues affecting your plumbing needs. We'll do our best to post updates immediately, but please note there may be a delay as we diagnose problems.
             </p>
         </div>
     </section>
 
-    <!-- Main Container -->
-    <main class="max-w-5xl mx-auto px-4 py-8 flex-grow w-full">
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <!-- Card Header -->
-            <div class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
-                <h2 class="text-sm sm:text-base font-semibold text-[#76AADA]">Automation Execution Logs</h2>
-                <div class="text-xs text-slate-500 flex items-center gap-2">
-                    <span id="cardUpdatedText">Updated 0s ago</span>
-                    <button onclick="fetchStatus()" title="Refresh" class="hover:rotate-180 transition-transform duration-300 text-slate-500">🔄</button>
+    <!-- Main Section (Full Page Background & Aligned with Navbar Width) -->
+    <main class="w-full bg-[#f8fafc] py-6 sm:py-8 flex-grow">
+        <div class="max-w-6xl mx-auto px-4 sm:px-8">
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <!-- Card Header -->
+                <div class="bg-white border-b border-slate-200/80 px-4 sm:px-6 py-3.5 sm:py-4 flex justify-between items-center">
+                    <h2 class="text-xs sm:text-base font-semibold text-[#76AADA]">Automation Execution Logs</h2>
+                    <div class="text-[11px] sm:text-xs text-slate-500 flex items-center gap-2">
+                        <span id="cardUpdatedText">Updated 0s ago</span>
+                        <button onclick="fetchStatus()" title="Refresh" class="hover:rotate-180 transition-transform duration-300 text-slate-500">🔄</button>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Controls Bar -->
-            <div class="bg-slate-50/70 border-b border-slate-100 px-6 py-3.5 flex flex-wrap gap-3 items-center">
-                <input type="text" class="px-3.5 py-1.5 border border-slate-300 rounded-md text-xs w-full sm:w-64 focus:ring-2 focus:ring-[#76AADA] focus:outline-none text-slate-700" placeholder="Filter by scraper name..." value="dispatch-board-display-automation">
-                <select class="px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-700 focus:ring-2 focus:ring-[#76AADA] focus:outline-none">
-                    <option>All statuses</option>
-                    <option>Running</option>
-                    <option>Success</option>
-                    <option>Error</option>
-                </select>
-                <select class="px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-700 focus:ring-2 focus:ring-[#76AADA] focus:outline-none">
-                    <option>10 per scraper</option>
-                    <option>25 per scraper</option>
-                    <option>50 per scraper</option>
-                </select>
-            </div>
-
-            <!-- Badges Section -->
-            <div class="px-6 py-3.5 border-b border-slate-100 flex flex-wrap gap-2.5 items-center bg-white">
-                <span id="successBadge" class="px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">0 Success</span>
-                <span id="errorBadge" class="px-3 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">0 Error</span>
-                <span id="partialBadge" class="px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">0 Partial</span>
-                <span id="runningBadge" class="px-3 py-1 rounded-full text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">1 Running</span>
-            </div>
-
-            <!-- Progress Bar Section -->
-            <div class="px-6 py-4 bg-slate-50/50 border-b border-slate-200">
-                <div class="flex justify-between text-xs font-semibold text-slate-600 mb-2">
-                    <span>30-Day FieldEdge Display Pre-Creation Progress</span>
-                    <span id="pctLabel">0%</span>
+                <!-- Controls Bar (Mobile Responsive) -->
+                <div class="bg-slate-50/70 border-b border-slate-100 px-4 sm:px-6 py-3 sm:py-3.5 flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center">
+                    <input type="text" class="px-3.5 py-1.5 border border-slate-300 rounded-md text-xs w-full sm:w-64 focus:ring-2 focus:ring-[#76AADA] focus:outline-none text-slate-700" placeholder="Filter by scraper name..." value="dispatch-board-display-automation">
+                    <div class="flex gap-2 sm:gap-3 w-full sm:w-auto">
+                        <select class="px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-700 focus:ring-2 focus:ring-[#76AADA] focus:outline-none flex-1 sm:flex-none">
+                            <option>All statuses</option>
+                            <option>Running</option>
+                            <option>Success</option>
+                            <option>Error</option>
+                        </select>
+                        <select class="px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-700 focus:ring-2 focus:ring-[#76AADA] focus:outline-none flex-1 sm:flex-none">
+                            <option>10 per scraper</option>
+                            <option>25 per scraper</option>
+                            <option>50 per scraper</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="w-full bg-slate-200/80 rounded-full h-3.5 overflow-hidden p-0.5">
-                    <div id="progressBarFill" class="bg-gradient-to-r from-[#76AADA] to-[#5c95c8] h-full rounded-full transition-all duration-500 ease-out" style="width: 0%;"></div>
-                </div>
-            </div>
 
-            <!-- Table Wrap -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs sm:text-sm text-slate-700">
-                    <thead class="bg-slate-50 text-slate-500 font-semibold uppercase text-[11px] tracking-wider border-b border-slate-200">
-                        <tr>
-                            <th class="px-6 py-3.5">Scraper Name</th>
-                            <th class="px-6 py-3.5">Active Target Date (PST)</th>
-                            <th class="px-6 py-3.5">Status</th>
-                            <th class="px-6 py-3.5">Batch Progress</th>
-                            <th class="px-6 py-3.5">Last Sync Time (PST)</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="px-6 py-4 font-semibold text-slate-800">dispatch-board-display-automation</td>
-                            <td id="activeDateTd" class="px-6 py-4 font-normal text-slate-700">-</td>
-                            <td id="statusPillTd" class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">RUNNING</span>
-                            </td>
-                            <td id="progressTd" class="px-6 py-4 font-normal text-slate-700">Day 0 of 30 (30 Days Left)</td>
-                            <td id="lastSyncTd" class="px-6 py-4 font-normal text-slate-700">- <span class="text-xs font-normal text-slate-400 ml-1">PST</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- Badges Section -->
+                <div class="px-4 sm:px-6 py-3 border-b border-slate-100 flex flex-wrap gap-2 sm:gap-2.5 items-center bg-white">
+                    <span id="successBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">0 Success</span>
+                    <span id="errorBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">0 Error</span>
+                    <span id="partialBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">0 Partial</span>
+                    <span id="runningBadge" class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">1 Running</span>
+                </div>
+
+                <!-- Progress Bar Section -->
+                <div class="px-4 sm:px-6 py-3.5 sm:py-4 bg-slate-50/50 border-b border-slate-200">
+                    <div class="flex justify-between text-[11px] sm:text-xs font-semibold text-slate-600 mb-2">
+                        <span>30-Day FieldEdge Display Pre-Creation Progress</span>
+                        <span id="pctLabel">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-200/80 rounded-full h-3 sm:h-3.5 overflow-hidden p-0.5">
+                        <div id="progressBarFill" class="bg-gradient-to-r from-[#76AADA] to-[#5c95c8] h-full rounded-full transition-all duration-500 ease-out" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- Table Wrap (Mobile Responsive Horizontal Scroll) -->
+                <div class="overflow-x-auto w-full">
+                    <table class="w-full min-w-[640px] text-left text-xs sm:text-sm text-slate-700">
+                        <thead class="bg-slate-50 text-slate-500 font-semibold uppercase text-[10px] sm:text-[11px] tracking-wider border-b border-slate-200">
+                            <tr>
+                                <th class="px-4 sm:px-6 py-3 sm:py-3.5">Scraper Name</th>
+                                <th class="px-4 sm:px-6 py-3 sm:py-3.5">Active Target Date (PST)</th>
+                                <th class="px-4 sm:px-6 py-3 sm:py-3.5">Status</th>
+                                <th class="px-4 sm:px-6 py-3 sm:py-3.5">Batch Progress</th>
+                                <th class="px-4 sm:px-6 py-3 sm:py-3.5">Last Sync Time (PST)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="px-4 sm:px-6 py-3.5 sm:py-4 font-semibold text-slate-800">dispatch-board-display-automation</td>
+                                <td id="activeDateTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700">-</td>
+                                <td id="statusPillTd" class="px-4 sm:px-6 py-3.5 sm:py-4">
+                                    <span class="px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200">RUNNING</span>
+                                </td>
+                                <td id="progressTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700">Day 0 of 30 (30 Days Left)</td>
+                                <td id="lastSyncTd" class="px-4 sm:px-6 py-3.5 sm:py-4 font-normal text-slate-700">- <span class="text-[11px] sm:text-xs font-normal text-slate-400 ml-1">PST</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="text-center py-6 text-xs font-normal text-slate-500 border-t border-slate-200/80 bg-white">
+    <!-- Small Compact Footer -->
+    <footer class="bg-white border-t border-slate-200/80 py-3.5 text-center text-[11px] sm:text-xs font-normal text-slate-500">
         © 2026 Sterling Septic & Plumbing LLC • All rights reserved.
     </footer>
 
