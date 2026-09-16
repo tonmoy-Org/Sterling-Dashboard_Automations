@@ -49,172 +49,246 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dispatch Board Automation Status</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Sterling Dispatch Automation Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Outfit', sans-serif;
-            background: #0f172a;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.12) 0px, transparent 50%);
             color: #f8fafc;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 24px;
         }
-        .card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 32px;
+        .container {
             width: 100%;
-            max-width: 540px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            max-width: 580px;
         }
-        .header {
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #0284c7, #6366f1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 8px 20px -4px rgba(2, 132, 199, 0.4);
+        }
+        .brand-text h1 { font-size: 19px; font-weight: 800; letter-spacing: -0.5px; color: #ffffff; }
+        .brand-text p { font-size: 13px; color: #94a3b8; font-weight: 500; }
+        
+        .card {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .status-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
-        .title { font-size: 20px; font-weight: 700; color: #38bdf8; }
-        .badge {
-            background: #059669;
-            color: #ecfdf5;
-            padding: 6px 14px;
+        .status-title { font-size: 15px; font-weight: 600; color: #cbd5e1; }
+        .badge-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+            padding: 6px 16px;
             border-radius: 9999px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 700;
             letter-spacing: 0.5px;
         }
-        .progress-section { margin-bottom: 24px; }
-        .progress-header {
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #34d399;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #34d399;
+            animation: pulse 1.8s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.25); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .progress-block { margin-bottom: 32px; }
+        .progress-labels {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
-            color: #94a3b8;
-            margin-bottom: 8px;
-            font-weight: 600;
+            align-items: baseline;
+            margin-bottom: 10px;
         }
-        .progress-bar-bg {
-            background: #334155;
-            height: 14px;
-            border-radius: 7px;
+        .progress-title { font-size: 14px; font-weight: 600; color: #94a3b8; }
+        .progress-pct { font-size: 32px; font-weight: 800; color: #38bdf8; letter-spacing: -1px; }
+
+        .progress-track {
+            background: #0f172a;
+            height: 16px;
+            border-radius: 8px;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2px;
         }
-        .progress-bar-fill {
-            background: linear-gradient(90deg, #38bdf8, #818cf8);
+        .progress-fill {
             height: 100%;
-            transition: width 0.4s ease;
+            background: linear-gradient(90deg, #38bdf8, #818cf8, #a855f7);
+            border-radius: 6px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
         }
-        .stats-grid {
+
+        .metrics-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
-        .stat-box {
-            background: #0f172a;
-            border: 1px solid #334155;
-            padding: 16px;
+        .metric-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 20px;
+            transition: transform 0.2s ease;
+        }
+        .metric-card:hover { transform: translateY(-2px); }
+        .metric-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+        .metric-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-top: 6px;
+        }
+
+        .live-log-bar {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 12px;
-            text-align: center;
-        }
-        .stat-val { font-size: 22px; font-weight: 700; color: #f8fafc; }
-        .stat-label { font-size: 12px; color: #94a3b8; margin-top: 4px; text-transform: uppercase; }
-        .status-msg {
-            background: #0f172a;
-            border: 1px solid #334155;
-            padding: 14px;
-            border-radius: 10px;
-            font-size: 14px;
-            color: #cbd5e1;
+            padding: 16px 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
-        .pulse {
-            width: 12px;
-            height: 12px;
-            background: #10b981;
-            border-radius: 50%;
-            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-            animation: pulse 2s infinite;
-            flex-shrink: 0;
-        }
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
+        .log-icon { font-size: 18px; }
+        .log-text { font-size: 14px; font-weight: 500; color: #cbd5e1; }
+        .footer-note { text-align: center; margin-top: 20px; font-size: 12px; color: #475569; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="header">
-            <div class="title">Dispatch Board Automation</div>
-            <div class="badge" id="modeBadge">LIVE MODE</div>
-        </div>
-        <div class="progress-section">
-            <div class="progress-header">
-                <span>Batch Progress (30 Days)</span>
-                <span id="percentText">0%</span>
-            </div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill" id="progressBar" style="width: 0%;"></div>
+    <div class="container">
+        <div class="brand">
+            <div class="brand-icon">⚡</div>
+            <div class="brand-text">
+                <h1>Sterling Septic & Plumbing</h1>
+                <p>Dispatch Board Display Automation</p>
             </div>
         </div>
-        <div class="stats-grid">
-            <div class="stat-box">
-                <div class="stat-val" id="currentDayVal">0 / 30</div>
-                <div class="stat-label">Days Processed</div>
+
+        <div class="card">
+            <div class="status-header">
+                <span class="status-title">System Execution Status</span>
+                <div class="badge-live" id="modeBadge">
+                    <div class="pulse-dot"></div>
+                    <span id="badgeText">LIVE AUTOMATION</span>
+                </div>
             </div>
-            <div class="stat-box">
-                <div class="stat-val" id="remainingVal">30</div>
-                <div class="stat-label">Days Remaining</div>
+
+            <div class="progress-block">
+                <div class="progress-labels">
+                    <span class="progress-title">30-Day Pre-Creation Progress</span>
+                    <span class="progress-pct" id="pctText">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
             </div>
-            <div class="stat-box">
-                <div class="stat-val" id="currentDateVal">-</div>
-                <div class="stat-label">Active Date Creation</div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="daysProcessedVal">0 / 30</div>
+                    <div class="metric-label">Completed Days</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="daysRemainingVal">30 Days</div>
+                    <div class="metric-label">Remaining to Create</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="activeDateVal">-</div>
+                    <div class="metric-label">Active Target Date</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="lastSyncVal">-</div>
+                    <div class="metric-label">Last Synchronization</div>
+                </div>
             </div>
-            <div class="stat-box">
-                <div class="stat-val" id="lastRunVal">-</div>
-                <div class="stat-label">Last Run Time</div>
+
+            <div class="live-log-bar">
+                <span class="log-icon">⚙️</span>
+                <span class="log-text" id="statusMsg">Initializing automation engine...</span>
             </div>
         </div>
-        <div class="status-msg">
-            <div class="pulse"></div>
-            <span id="statusMessage">Connecting to automation...</span>
-        </div>
+        <div class="footer-note">Auto-refreshing live metrics every 2s • Connected to VPS</div>
     </div>
+
     <script>
-        async function fetchStatus() {
+        async function updateDashboard() {
             try {
-                const res = await fetch('/?format=json');
+                const res = await fetch('/?json=1');
                 const data = await res.json();
-                document.getElementById('modeBadge').innerText = data.mode + ' MODE';
-                document.getElementById('lastRunVal').innerText = data.last_run ? data.last_run.split(' ')[1] : '-';
+                
+                document.getElementById('badgeText').innerText = (data.mode || 'LIVE') + ' RUNNING';
                 
                 const p = data.progress || {};
                 const curDay = p.current_day || 0;
-                const totalDays = p.total_days || data.days_configured || 30;
-                const rem = p.remaining_days !== undefined ? p.remaining_days : totalDays;
-                const pct = p.percent_complete || 0;
+                const total = p.total_days || data.days_configured || 30;
+                const rem = p.remaining_days !== undefined ? p.remaining_days : (total - curDay);
+                const pct = p.percent_complete !== undefined ? p.percent_complete : 0;
                 
-                document.getElementById('percentText').innerText = pct + '%';
-                document.getElementById('progressBar').style.width = pct + '%';
-                document.getElementById('currentDayVal').innerText = curDay + ' / ' + totalDays;
-                document.getElementById('remainingVal').innerText = rem + ' Days Left';
-                document.getElementById('currentDateVal').innerText = p.current_date || '-';
-                document.getElementById('statusMessage').innerText = p.status_message || data.last_status || 'Running';
-            } catch (e) {
-                console.error(e);
+                document.getElementById('pctText').innerText = pct + '%';
+                document.getElementById('progressFill').style.width = pct + '%';
+                
+                document.getElementById('daysProcessedVal').innerText = curDay + ' / ' + total;
+                document.getElementById('daysRemainingVal').innerText = rem + ' Days Left';
+                document.getElementById('activeDateVal').innerText = p.current_date || '-';
+                document.getElementById('lastSyncVal').innerText = data.last_run ? data.last_run.split(' ')[1] : '-';
+                document.getElementById('statusMsg').innerText = p.status_message || data.last_status || 'System Active';
+            } catch (err) {
+                console.error('Error updating status:', err);
             }
         }
-        setInterval(fetchStatus, 3000);
-        fetchStatus();
+        setInterval(updateDashboard, 2000);
+        updateDashboard();
     </script>
 </body>
 </html>
@@ -222,8 +296,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 class StatusHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
-        accept_header = self.headers.get("Accept", "")
-        if "application/json" in accept_header or "format=json" in self.path or "/api" in self.path:
+        if "json=1" in self.path or "/api" in self.path or "application/json" in self.headers.get("Accept", ""):
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Access-Control-Allow-Origin", "*")
