@@ -33,6 +33,7 @@ STATUS_DATA = {
     "last_run": None,
     "last_run_pst": None,
     "last_status": "initialized",
+    "fieldedge_status": "Connected / Active Session",
     "progress": {
         "current_day": 0,
         "total_days": 30,
@@ -45,6 +46,30 @@ STATUS_DATA = {
     },
     "port": 3000
 }
+
+STATE_FILE = os.path.join(_dispatch_dir, "config", "status_state.json")
+
+def save_status_state():
+    try:
+        os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
+        with open(STATE_FILE, "w", encoding="utf-8") as f:
+            json.dump(STATUS_DATA, f, indent=2)
+    except Exception as e:
+        print(f"⚠️ Failed to save status state: {e}")
+
+def load_status_state():
+    if os.path.exists(STATE_FILE):
+        try:
+            with open(STATE_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, dict):
+                    STATUS_DATA.update(data)
+                    print("✅ Loaded persisted status state from config/status_state.json")
+        except Exception as e:
+            print(f"⚠️ Failed to load status state: {e}")
+
+load_status_state()
+
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
@@ -218,17 +243,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 lastFetchTime = Date.now();
                 
                 const p = data.progress || {};
-                const curDay = p.current_day || 0;
+                const curDay = p.completed_days !== undefined ? p.completed_days : (p.current_day || 0);
                 const total = p.total_days || data.days_configured || 30;
-                const rem = p.remaining_days !== undefined ? p.remaining_days : (total - curDay);
-                const pct = p.percent_complete !== undefined ? p.percent_complete : 0;
+                const rem = p.remaining_days !== undefined ? p.remaining_days : Math.max(0, total - curDay);
+                const pct = p.percent_complete !== undefined ? p.percent_complete : (curDay > 0 ? Math.round((curDay / total) * 100) : 0);
+                const displayDay = (p.current_day !== undefined && p.current_day > 0) ? p.current_day : curDay;
                 
                 document.getElementById('successBadge').innerText = curDay + ' Success';
                 document.getElementById('pctLabel').innerText = pct + '%';
                 document.getElementById('progressBarFill').style.width = pct + '%';
                 
                 document.getElementById('activeDateTd').innerText = p.current_date || 'Today';
-                document.getElementById('progressTd').innerText = 'Day ' + curDay + ' of ' + total + ' (' + rem + ' Days Left)';
+                document.getElementById('progressTd').innerText = 'Day ' + displayDay + ' of ' + total + ' (' + rem + ' Days Left)';
+
                 
                 const rawLastSync = data.last_run_pst || data.last_run || '-';
                 let cleanSync = String(rawLastSync).trim();
@@ -388,6 +415,7 @@ def on_progress_update(progress_dict):
     if isinstance(progress_dict, dict) and "fieldedge_status" in progress_dict:
         STATUS_DATA["fieldedge_status"] = progress_dict["fieldedge_status"]
     STATUS_DATA["last_run_pst"] = get_pst_now().strftime("%Y-%m-%d %I:%M:%S %p PST")
+    save_status_state()
 
 
 async def run_automation(args):
@@ -395,6 +423,7 @@ async def run_automation(args):
     STATUS_DATA["days_configured"] = args.days
     STATUS_DATA["progress"]["total_days"] = args.days
     STATUS_DATA["progress"]["remaining_days"] = args.days
+    save_status_state()
 
     scraper = DispatchBoardDisplayAutomationScraper()
     if args.loop:
@@ -405,13 +434,26 @@ async def run_automation(args):
             STATUS_DATA["last_run"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             STATUS_DATA["last_run_pst"] = now_pst
             STATUS_DATA["last_status"] = "running"
+            save_status_state()
             try:
                 await scraper.run(days=args.days, dry_run=not args.live, start_date_str=args.start_date, on_progress=on_progress_update)
                 STATUS_DATA["last_status"] = "success"
+                STATUS_DATA["fieldedge_status"] = "Connected / Active Session"
+                STATUS_DATA["progress"].update({
+                    "current_day": args.days,
+                    "completed_days": args.days,
+                    "remaining_days": 0,
+                    "percent_complete": 100.0,
+                    "status": "completed",
+                    "status_message": f"Successfully completed all {args.days} days!"
+                })
+                save_status_state()
             except Exception as e:
                 err_str = str(e)
                 print(f"❌ Error during scheduled run: {err_str}")
                 STATUS_DATA["last_status"] = f"error: {err_str}"
+                save_status_state()
+
                 
                 # Check for session logout / concurrent login
                 if "login" in err_str.lower() or "session" in err_str.lower() or "concurrent" in err_str.lower():
