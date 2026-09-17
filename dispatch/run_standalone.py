@@ -140,23 +140,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     </div>
                 </div>
 
-                <!-- Controls Bar (Mobile Responsive) -->
-                <div class="bg-slate-50/80 border-b border-slate-200/80 px-4 sm:px-6 py-3 sm:py-3.5 flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center">
-                    <input type="text" class="px-3.5 py-1.5 border border-slate-300 rounded-[5px] text-xs w-full sm:w-64 focus:ring-2 focus:ring-[#76AADA] focus:outline-none text-slate-800 bg-white" placeholder="Filter by scraper name..." value="dispatch-board-display-automation">
-                    <div class="flex gap-2 sm:gap-3 w-full sm:w-auto">
-                        <select class="px-3 py-1.5 border border-slate-300 rounded-[5px] text-xs bg-white text-slate-800 focus:ring-2 focus:ring-[#76AADA] focus:outline-none flex-1 sm:flex-none">
-                            <option>All statuses</option>
-                            <option>Running</option>
-                            <option>Success</option>
-                            <option>Error</option>
-                        </select>
-                        <select class="px-3 py-1.5 border border-slate-300 rounded-[5px] text-xs bg-white text-slate-800 focus:ring-2 focus:ring-[#76AADA] focus:outline-none flex-1 sm:flex-none">
-                            <option>10 per scraper</option>
-                            <option>25 per scraper</option>
-                            <option>50 per scraper</option>
-                        </select>
-                    </div>
-                </div>
 
                 <!-- Badges Section & FieldEdge Real-Time Login Indicator -->
                 <div class="px-4 sm:px-6 py-3 border-b border-slate-200/80 flex flex-wrap gap-2 sm:gap-2.5 items-center justify-between bg-white/70">
@@ -263,19 +246,25 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const feDot = document.getElementById('fieldedgeDot');
                 const feText = document.getElementById('fieldedgeText');
 
-                if (feStatus.toLowerCase().includes('logged out') || feStatus.toLowerCase().includes('retry') || feStatus.toLowerCase().includes('pause') || msg.includes('Concurrent')) {
-                    feBadge.className = 'px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1.5 whitespace-nowrap';
+                const feLower = feStatus.toLowerCase();
+                if (feLower.includes('logged out') || feLower.includes('retry') || feLower.includes('pause') || feLower.includes('concurrent') || msg.includes('Concurrent')) {
+                    feBadge.className = 'px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1.5 whitespace-nowrap shadow-sm';
                     feDot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-ping';
-                    feText.innerText = 'FieldEdge: ' + (data.fieldedge_status || 'Session Logged Out (Wait 30m)');
-                } else if (feStatus.toLowerCase().includes('logg')) {
-                    feBadge.className = 'px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-sky-50 text-[#5c95c8] border border-sky-200 flex items-center gap-1.5 whitespace-nowrap';
+                    feText.innerText = 'FieldEdge: ' + feStatus;
+                } else if (feLower.includes('logg') || (feLower.includes('connect') && !feLower.includes('active'))) {
+                    feBadge.className = 'px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-semibold bg-sky-50 text-[#5c95c8] border border-sky-200 flex items-center gap-1.5 whitespace-nowrap shadow-sm';
                     feDot.className = 'w-2 h-2 rounded-full bg-[#76AADA] animate-pulse';
-                    feText.innerText = 'FieldEdge: Logging in...';
+                    feText.innerText = 'FieldEdge: ' + feStatus;
+                } else if (feLower.includes('fail') || feLower.includes('error')) {
+                    feBadge.className = 'px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 flex items-center gap-1.5 whitespace-nowrap shadow-sm';
+                    feDot.className = 'w-2 h-2 rounded-full bg-rose-500';
+                    feText.innerText = 'FieldEdge: ' + feStatus;
                 } else {
-                    feBadge.className = 'px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 whitespace-nowrap';
+                    feBadge.className = 'px-3 py-1 rounded-[5px] text-[11px] sm:text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 whitespace-nowrap shadow-sm';
                     feDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
-                    feText.innerText = 'FieldEdge: Connected / Active Session';
+                    feText.innerText = 'FieldEdge: ' + (feStatus.includes('FieldEdge') ? feStatus : feStatus);
                 }
+
 
                 const statusPill = document.getElementById('statusPillTd');
                 const runningBadge = document.getElementById('runningBadge');
@@ -396,7 +385,10 @@ def start_status_server(port: int):
 
 def on_progress_update(progress_dict):
     STATUS_DATA["progress"] = progress_dict
+    if isinstance(progress_dict, dict) and "fieldedge_status" in progress_dict:
+        STATUS_DATA["fieldedge_status"] = progress_dict["fieldedge_status"]
     STATUS_DATA["last_run_pst"] = get_pst_now().strftime("%Y-%m-%d %I:%M:%S %p PST")
+
 
 async def run_automation(args):
     STATUS_DATA["mode"] = "LIVE" if args.live else "DRY RUN"

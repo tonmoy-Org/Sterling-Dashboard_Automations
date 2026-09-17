@@ -1030,6 +1030,7 @@ class DispatchBoardDisplayAutomationScraper(BaseScraper):
         _records_processed = 0
         _details = {"processed_dates": []}
 
+        self._on_progress_cb = on_progress
         self.progress_info = {
             "current_day": 0,
             "total_days": days,
@@ -1038,13 +1039,15 @@ class DispatchBoardDisplayAutomationScraper(BaseScraper):
             "remaining_days": days,
             "percent_complete": 0.0,
             "status": "starting",
-            "status_message": f"Initializing automation for {days} days..."
+            "status_message": f"Initializing automation for {days} days...",
+            "fieldedge_status": "Connecting / Logging in..."
         }
         if on_progress:
             try:
                 on_progress(self.progress_info)
             except Exception:
                 pass
+
 
         settings = self.template_data.get("general_settings", {})
         task = settings.get("task", "8 - INTERNAL")

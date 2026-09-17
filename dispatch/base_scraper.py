@@ -165,6 +165,18 @@ class BaseScraper:
     async def login_fieldedge(self, page: Page = None):
         """Authenticate to FieldEdge dashboard."""
         FIELDEDGE_LOGIN_URL = self.rules.get('fieldedge_login_url', 'https://login.fieldedge.com/Account/Login')
+        
+        def _update_fe_status(status_str):
+            if hasattr(self, "progress_info") and isinstance(self.progress_info, dict):
+                self.progress_info["fieldedge_status"] = status_str
+            cb = getattr(self, "_on_progress_cb", None)
+            if cb:
+                try:
+                    cb(getattr(self, "progress_info", {"fieldedge_status": status_str}))
+                except Exception:
+                    pass
+
+        _update_fe_status("Logging in to FieldEdge...")
         try:
             if not self.fieldedge_email or not self.fieldedge_password:
                 raise ValueError("FieldEdge credentials not found. Please ensure DASH_EMAIL and DASH_PASSWORD are set in the .env file.")
@@ -203,10 +215,13 @@ class BaseScraper:
                 await page.wait_for_load_state("domcontentloaded", timeout=30000)
 
             print("FieldEdge login successful.")
+            _update_fe_status("Connected / Active Session")
 
         except Exception as e:
             print(f"FieldEdge login failed: {e}")
+            _update_fe_status(f"Login Failed ({e})")
             raise
+
 
     async def perform_actions_by_xpaths(self, name: str = '', action_list: list = None, value: str = None, raise_on_error: bool = False, page = None):
         """Execute actions on UI elements by XPath."""
