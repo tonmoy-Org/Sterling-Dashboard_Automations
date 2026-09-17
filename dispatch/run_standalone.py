@@ -223,8 +223,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         
         async function fetchStatus() {
             try {
-                const jsonUrl = window.location.pathname.includes('/dispatch') ? '/dispatch?json=1' : '?json=1';
-                const res = await fetch(jsonUrl);
+                let res = await fetch('/dispatch?json=1');
+                if (!res.ok) {
+                    const altUrl = window.location.pathname.replace(/\/+$/, '') + '?json=1';
+                    res = await fetch(altUrl);
+                }
+                if (!res.ok) {
+                    res = await fetch('/?json=1');
+                }
                 const data = await res.json();
                 lastFetchTime = Date.now();
                 
@@ -358,7 +364,7 @@ class StatusHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.end_headers()
                 return
 
-        if "json=1" in clean_path or "/api" in clean_path or "application/json" in self.headers.get("Accept", ""):
+        if "json=1" in self.path or "json=1" in clean_path or "/api" in clean_path or "application/json" in self.headers.get("Accept", ""):
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Access-Control-Allow-Origin", "*")
