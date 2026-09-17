@@ -1142,16 +1142,19 @@ class DispatchBoardDisplayAutomationScraper(BaseScraper):
                     if len(parts) == 2:
                         lock_pid = int(parts[0])
                         lock_start_time = float(parts[1])
+                    else:
+                        lock_pid = 0
+                        lock_start_time = float(parts[0])
+
                     if lock_pid > 0 and lock_pid != os.getpid() and lock_pid != 1 and _is_pid_running(lock_pid):
                         if time.time() - lock_start_time < 7200:
                             print(f"⛔ SCRAPER IS ALREADY RUNNING (PID {lock_pid}, Started {round((time.time() - lock_start_time)/60, 1)} mins ago). Exiting to prevent duplicate creation.")
                             return
                     else:
-                        print(f"🧹 Found stale/previous lock file (PID {lock_pid}). Cleaning up lock...")
+                        print(f"🧹 Found stale lock file from inactive process (PID {lock_pid}). Cleaning up lock...")
             except Exception:
                 pass
             _cleanup_lock()
-
 
         try:
             with open(lock_file_path, "w") as f:
