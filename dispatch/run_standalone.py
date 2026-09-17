@@ -223,7 +223,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         
         async function fetchStatus() {
             try {
-                const res = await fetch('/?json=1');
+                const jsonUrl = window.location.pathname.includes('/dispatch') ? '/dispatch?json=1' : '?json=1';
+                const res = await fetch(jsonUrl);
                 const data = await res.json();
                 lastFetchTime = Date.now();
                 
