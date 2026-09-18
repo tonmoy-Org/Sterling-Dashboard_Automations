@@ -336,72 +336,95 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 """
 
 class StatusHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
+    def handle_one_request(self):
+        try:
+            super().handle_one_request()
+        except (ConnectionResetError, BrokenPipeError, ConnectionAbortedError):
+            pass
+
     def do_HEAD(self):
-        self.do_GET()
+        try:
+            self.do_GET()
+        except (ConnectionResetError, BrokenPipeError, ConnectionAbortedError):
+            pass
 
     def do_GET(self):
-        clean_path = self.path
-        if clean_path.startswith("/dispatch"):
-            clean_path = clean_path[len("/dispatch"):]
-            if not clean_path or not clean_path.startswith("/"):
-                clean_path = "/" + clean_path
+        try:
+            clean_path = self.path
+            if clean_path.startswith("/dispatch"):
+                clean_path = clean_path[len("/dispatch"):]
+                if not clean_path or not clean_path.startswith("/"):
+                    clean_path = "/" + clean_path
 
-        if clean_path.startswith("/assets/") or clean_path in ("/favicon.ico", "/logo.png", "/favicon.png"):
-            asset_name = os.path.basename(clean_path)
-            candidates = [
-                os.path.join(_dispatch_dir, "assets", asset_name),
-                os.path.join(_dispatch_dir, "dispatch", "assets", asset_name),
-                os.path.join(os.getcwd(), "assets", asset_name),
-                os.path.join(os.getcwd(), "dispatch", "assets", asset_name),
-            ]
-            asset_path = None
-            for cand in candidates:
-                if os.path.exists(cand):
-                    asset_path = cand
-                    break
+            if clean_path.startswith("/assets/") or clean_path in ("/favicon.ico", "/logo.png", "/favicon.png"):
+                asset_name = os.path.basename(clean_path)
+                candidates = [
+                    os.path.join(_dispatch_dir, "assets", asset_name),
+                    os.path.join(_dispatch_dir, "dispatch", "assets", asset_name),
+                    os.path.join(os.getcwd(), "assets", asset_name),
+                    os.path.join(os.getcwd(), "dispatch", "assets", asset_name),
+                ]
+                asset_path = None
+                for cand in candidates:
+                    if os.path.exists(cand):
+                        asset_path = cand
+                        break
 
-            if asset_path:
-                self.send_response(200)
-                ext = os.path.splitext(asset_path)[1].lower()
-                if ext in (".jpg", ".jpeg"):
-                    content_type = "image/jpeg"
-                elif ext == ".png":
-                    content_type = "image/png"
+                if asset_path:
+                    self.send_response(200)
+                    ext = os.path.splitext(asset_path)[1].lower()
+                    if ext in (".jpg", ".jpeg"):
+                        content_type = "image/jpeg"
+                    elif ext == ".png":
+                        content_type = "image/png"
+                    else:
+                        content_type = "image/x-icon"
+                    self.send_header("Content-Type", content_type)
+                    self.send_header("Cache-Control", "public, max-age=86400")
+                    self.end_headers()
+                    with open(asset_path, "rb") as f:
+                        self.wfile.write(f.read())
+                    return
                 else:
-                    content_type = "image/x-icon"
-                self.send_header("Content-Type", content_type)
-                self.send_header("Cache-Control", "public, max-age=86400")
-                self.end_headers()
-                with open(asset_path, "rb") as f:
-                    self.wfile.write(f.read())
-                return
-            else:
-                self.send_response(404)
-                self.end_headers()
-                return
+                    self.send_response(404)
+                    self.end_headers()
+                    return
 
-        if "json=1" in self.path or "json=1" in clean_path or "/api" in clean_path or "application/json" in self.headers.get("Accept", ""):
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            response_data = json.dumps(STATUS_DATA, indent=2)
-            self.wfile.write(response_data.encode("utf-8"))
-        else:
-            self.send_response(200)
-            self.send_header("Content-Type", "text/html; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(HTML_TEMPLATE.encode("utf-8"))
+            if "json=1" in self.path or "json=1" in clean_path or "/api" in clean_path or "application/json" in self.headers.get("Accept", ""):
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                response_data = json.dumps(STATUS_DATA, indent=2)
+                self.wfile.write(response_data.encode("utf-8"))
+            else:
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(HTML_TEMPLATE.encode("utf-8"))
+        except (ConnectionResetError, BrokenPipeError, ConnectionAbortedError):
+            pass
 
     def log_message(self, format, *args):
         pass
+
+
+class QuietThreadingTCPServer(socketserver.ThreadingTCPServer):
+    allow_reuse_address = True
+
+    def handle_error(self, request, client_address):
+        exc_type, exc_val, _ = sys.exc_info()
+        if exc_type in (ConnectionResetError, BrokenPipeError, ConnectionAbortedError):
+            return  # Silently suppress socket disconnects and port scan errors
+        super().handle_error(request, client_address)
+
 
 def start_status_server(port: int):
     STATUS_DATA["port"] = port
     def run_server():
         try:
             handler = StatusHTTPRequestHandler
-            with socketserver.TCPServer(("", port), handler) as httpd:
+            with QuietThreadingTCPServer(("", port), handler) as httpd:
                 print(f"🌐 Status & Health Server listening on port {port} (http://0.0.0.0:{port})")
                 httpd.serve_forever()
         except Exception as e:
@@ -426,17 +449,37 @@ async def run_automation(args):
     save_status_state()
 
     scraper = DispatchBoardDisplayAutomationScraper()
+    current_start_date = args.start_date
+
     if args.loop:
         print(f"🔄 Loop Mode enabled. Running every {args.interval_hours} hours to maintain {args.days} pre-created days...")
         while True:
             now_pst = get_pst_now().strftime("%Y-%m-%d %I:%M:%S %p PST")
             print(f"\n⏰ [{now_pst}] Starting automation run for {args.days} days...")
+            if current_start_date:
+                print(f"   Using start date override for initial run: {current_start_date}")
+            else:
+                print(f"   Target date range: Today ({get_pst_now().strftime('%Y-%m-%d')}) + {args.days} rolling days ahead.")
+
             STATUS_DATA["last_run"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             STATUS_DATA["last_run_pst"] = now_pst
             STATUS_DATA["last_status"] = "running"
             save_status_state()
             try:
-                await scraper.run(days=args.days, dry_run=not args.live, start_date_str=args.start_date, on_progress=on_progress_update)
+                await scraper.run(
+                    days=args.days,
+                    dry_run=not args.live,
+                    start_date_str=current_start_date,
+                    on_progress=on_progress_update
+                )
+
+                # After initial successful run with an explicit start_date_str, reset it to None
+                # so that subsequent daily loop runs start from TODAY (get_pst_now().date())
+                # to maintain a rolling 30 pre-created days into the future!
+                if current_start_date is not None:
+                    print(f"✅ Initial start date override ('{current_start_date}') completed. Resetting start date to rolling TODAY for future 24h loops.")
+                    current_start_date = None
+
                 STATUS_DATA["last_status"] = "success"
                 STATUS_DATA["fieldedge_status"] = "Connected / Active Session"
                 STATUS_DATA["progress"].update({
@@ -454,7 +497,6 @@ async def run_automation(args):
                 STATUS_DATA["last_status"] = f"error: {err_str}"
                 save_status_state()
 
-                
                 # Check for session logout / concurrent login
                 if "login" in err_str.lower() or "session" in err_str.lower() or "concurrent" in err_str.lower():
                     print("⚠️ FieldEdge single account concurrent login detected. Pausing for 30 minutes before auto-retry...")

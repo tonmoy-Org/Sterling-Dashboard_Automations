@@ -6,12 +6,15 @@ dispatch/*.env
 
 # Python cache & locks
 __pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 *.lock
 *.log
+dispatch/config/status_state.json
 
 # IDE & OS files
 .vscode/
 .idea/
 .DS_Store
+
