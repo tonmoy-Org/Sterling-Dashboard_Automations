@@ -19,4 +19,4 @@ services:
       - ./dispatch/config:/app/config
       - ./dispatch/assets:/app/assets
       - ./dispatch/run_standalone.py:/app/run_standalone.py
-    command: python run_standalone.py --live --days 30 --loop --port 3000
+    command: python run_standalone.py --live --days 31 --loop --port 3000

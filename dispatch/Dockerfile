@@ -21,4 +21,4 @@ COPY . /app/
 
 EXPOSE 3000
 
-CMD ["python", "run_standalone.py", "--live", "--days", "30", "--loop", "--port", "3000"]
+CMD ["python", "run_standalone.py", "--live", "--days", "31", "--loop", "--port", "3000"]

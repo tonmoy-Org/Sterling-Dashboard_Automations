@@ -29,17 +29,17 @@ STATUS_DATA = {
     "status": "online",
     "service": "Dispatch Board Display Automation",
     "mode": "DRY RUN",
-    "days_configured": 30,
+    "days_configured": 31,
     "last_run": None,
     "last_run_pst": None,
     "last_status": "initialized",
     "fieldedge_status": "Connected / Active Session",
     "progress": {
         "current_day": 0,
-        "total_days": 30,
+        "total_days": 31,
         "current_date": None,
         "completed_days": 0,
-        "remaining_days": 30,
+        "remaining_days": 31,
         "percent_complete": 0.0,
         "status": "idle",
         "status_message": "Waiting for run to start..."
@@ -525,7 +525,7 @@ async def run_automation(args):
 
 def main():
     parser = argparse.ArgumentParser(description="Run Dispatch Board Display Automation Scraper (Standalone)")
-    parser.add_argument("--days", type=int, default=30, help="Number of days to process (default: 30)")
+    parser.add_argument("--days", type=int, default=31, help="Number of days to process (default: 31)")
     parser.add_argument("--live", action="store_true", help="Run live on FieldEdge (skips dry-run)")
     parser.add_argument("--start-date", type=str, help="Starting date (e.g. 'August 15', '08/15/2026'). Defaults to today.")
     parser.add_argument("--loop", action="store_true", help="Run continuously on a scheduled interval (e.g. daily)")
